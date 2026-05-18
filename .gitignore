@@ -1,2 +1,2 @@
-docs/*.pdf
+*.pdf
 !docs/progress_report.pdf
