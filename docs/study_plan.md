@@ -30,7 +30,7 @@ The user can then accept it or refine it  through further natural language feedb
 The central claim this project investigates is:
 
 > Conversational clustering allows users to easily express their preferences,
-> and at the same time achieving comparable or better results than using classical clustering algorithms (manually fine-tuned).
+> and at the same time achieve comparable or better results than using classical clustering algorithms (manually fine-tuned).
 
 ## Questions
 
