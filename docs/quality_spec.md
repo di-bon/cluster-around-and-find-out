@@ -2,15 +2,37 @@
 
 This document defines the evaluation metrics used to compare the results of the proposed approach.
 
-## Evaluating clusters
+## Background
 
 Evaluating the proposed clustering solution is a challenging task, as there is no real ground truth and the results are subjective to the users:
 given the same dataset and the same clustering solution, one user might accept the clustering assignemnt and another one might require changes to that.
 
-While this issue reamins unsolved for now, the evaluation of an assignment can still be measured using classical metrics, such as the silouhette coefficient.
-These methods can be applied to traditional clustering algorithms, but if the users modifies the output (e.g. by merging 2 clusters), then the results may not reflect what the user perceives in terms of quality.
-To address this problem, the evaluation can be performed by not totally relying on user-modified clusters:
-for instance, if clusters 1 and 2 are merged into the same one (cluster 3), then computing the silouhette coeffiecient on cluster 3 might produce a low score.
-It may be better to compute the score of cluster 3 by computing the score of cluster 1 and 2 individually, and then use them to compute the score of cluster 3 by calculating the weighted average of clusters 1 and 2.
+It is worth noticing that, even if clustering is a central part of this project, it is not what it is being evalated.
+The evaluation focuses on the goodness of the conversation between the LLM and the user and on how the proposed solution fits the user's preferences.
+This is different than assessing whether a clustering algorithm actually produces 'good' clusters compared to a ground truth (that in this project is not taken into account).
 
-To mimic user's preferences, the LLM-as-a-judge method can be used (which is a fine-tuned LLM evaluator).
+## Metrics
+
+The metrics that will be evaluated are:
+
+1. clustering quality:
+the solhouette score is computed on the identified clusters.
+This metric is only used as a sanity check, ensuring that no edge cases are produced (i.e. one cluster for each datapoint, or just a single cluster is produced as the result).
+
+1. Conversation quality:
+this is the core of this study.
+It it composed of multiple metrics:
+
+    1. efficiency: 
+    for each run, the turns to convergence and tokens exchanged are measured.
+    Lower turns/fewer tokens are preferred, as the system can be perceived as easier to use for humans, requiring less cognitive load to express the clustering preferences.
+
+    1. question clarity:
+    the number of tokens used by the user to generate an answer.
+    Fewer tokens are an indication of a clearer, better question.
+
+    1. faithfulness:
+    check whether the final result refelects the user preferences.
+    This is measured using a Likert scale (from 1 to 5), using an LLM-as-judge.
+    The reliability of the LLM-as-judge is evaluated by having a set of human-evaluated examples (at least 30 ideally, time permitting) used to compute the Spearman correlation.
+
