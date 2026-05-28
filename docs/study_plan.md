@@ -1,8 +1,14 @@
 # Study Plan
 
-v1 - 2026-05-21
+v2 - 2026-05-28
 
 ## Changelog
+
+### v2 (2026-05-28)
+
+- Update probem statement
+- Update research questions
+- Add 'Provenance, ethics and exploration' section for the datasets used 
 
 ### v1 (2026-05-21) 
 
@@ -27,10 +33,8 @@ a conversational clustering system where the user expresses their preferences in
 The LLM elicits the user's intent through targeted questions, translates it into clustering constraints, and proposes a clustering assignment.
 The user can then accept it or refine it  through further natural language feedback ("split cluster 1",  "merge clusters 2 and 5").
 
-The central claim this project investigates is:
-
-> Conversational clustering allows users to easily express their preferences,
-> and at the same time achieve comparable or better results than using classical clustering algorithms (manually fine-tuned).
+This project assumes that, given a good enough conversational clustering system that allows users to easily express their preference,
+this can produce comparable or better results than a classical clustering approach (i.e. manually fine-tuning clustering algorithms, such as K-means).
 
 ## Questions
 
@@ -38,13 +42,14 @@ The following questions guide the project.
 **Q1 is the primary question** and the one the study is designed to answer. 
 Q2 is a secondary question that might be addressed if time permits.
 
-### Q1 (Primary) — Viability and usability vs. classical clustering
-*Does a conversational clustering system allow non-expert users to produce cluster assignments of comparable quality to those produced by expert users of classical clustering tools 
-(e.g. K-means with manual hyperparameter tuning), while requiring less domain-specific technical knowledge?*
+### Q1 (Primary) — Conversation efficiency
+*Given a conversational clustering system, what properties of the conversation affect how quickly and faithfully the user's intent is captured? 
+Specifically: which question type (open-ended / binary pairwise / example triplet) is the best to ask, in terms of conversation length (number of turns) and total tokens exchanged?*
 
-### Q2 (Secondary) — Conversation efficiency
-*Given that the conversational interface works, what properties of the conversation affect how quickly and faithfully the user's intent is captured? 
-Specifically: does question type (open-ended / binary pairwise / example triplet), conversation length (number of turns), and total tokens exchanged predict preference-alignment score?*
+### Q2 (Secondary) - Faithfulness
+*How faithful is the proposed result, given the preferences of the user?
+If the user requires additional changes (i.e. merging or splitting clusters), can the system update its representation to meet the user's preference?
+If so, how many turns does this process take?*
 
 ### Other open questions
 
@@ -70,7 +75,8 @@ Here are listed the simplifying assumptions for this project:
 - **Text data only**: the system operates on text documents. Multimodal 
   data is out of scope.
 - **Offline clustering**: the system produces a single clustering at the 
-  end of the conversation, not incrementally during it.
+  end of the conversation, not incrementally during it. Then, it can be
+  refined if the user wants to.
 
 ## Datasets
 
@@ -84,3 +90,16 @@ The dataset is available [here](https://github.com/jacoxu/StackOverflow).
 - GoEmotions:
 it contains around 58k Reddit comments and it provides human annotations (28 classes in total, based on emotions) to be used as ground-truth.
 The dataset is available [here](https://github.com/google-research/google-research/tree/master/goemotions).
+
+### Provenance, ethics and exploration
+
+- StackOverflow:
+this is a public dataset, created by scraping StackOverflow's questions titles.
+For this reason, the data should not contain any personal information, meaning that no data anonymization process is required.
+No bias that could harm the results of this project was identified in this dataset.
+
+- GoEmotions:
+this is a public dataset, created by Google Research by extracting the corpus of Reddit comments.
+Given the nature of the data, the authors attempted to remove sensitive aspects of it.
+The content of the dataset, while potentially containing problematic content, should not influence the final results of this project.
+More considerations about this dataset are available [here](https://github.com/google-research/google-research/blob/master/goemotions/goemotions_model_card.pdf).
