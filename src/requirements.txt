@@ -1,0 +1,37 @@
+# qwen3.6:35b
+ollama
+
+# NV-Embed
+# Core ML Pipeline
+torch>=2.2.0
+transformers>=4.42.4,<=4.51.3
+tokenizers>=0.19.1
+
+# Text Processing & Utilities
+sentence-transformers>=2.7.0
+accelerate>=0.30.0
+numpy>=1.24.0,<2.0.0
+
+# Network & Storage Helpers
+huggingface_hub>=0.23.0
+safetensors>=0.4.3
+requests>=2.31.0
+
+# transformers<4.46.0
+einops 
+
+sentencepiece
+datasets
+
+# K-means, AgglomerativeClustering, normalize
+scikit-learn
+# hdbscan
+hdbscan
+# dataclasses
+dataclasses
+# umap - dimensionality reduction
+umap-learn
+# client
+openai
+# dotenv
+python-dotenv
