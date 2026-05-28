@@ -44,7 +44,7 @@ Q2 is a secondary question that might be addressed if time permits.
 
 ### Q1 (Primary) — Conversation efficiency
 *Given a conversational clustering system, what properties of the conversation affect how the user's intent is captured? 
-Specifically: which question type (open-ended / binary pairwise / example triplet) is the best to ask, in terms of conversation length (number of turns) and total tokens exchanged?*
+Specifically: which question type (yes/no / multiple choice / open-ended) is the best to ask, in terms of conversation length (number of turns) and total tokens exchanged?*
 
 ### Q2 (Secondary) - Faithfulness
 *How faithful is the proposed result, given the preferences of the user?
