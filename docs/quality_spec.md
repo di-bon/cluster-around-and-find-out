@@ -29,7 +29,10 @@ It it composed of multiple metrics:
 
     1. question clarity:
     the number of tokens used by the user to generate an answer.
+    Fewer tokens are an indication of a clearer, better question.
 
     1. faithfulness:
     check whether the final result refelects the user preferences.
     This is measured using a Likert scale (from 1 to 5), using an LLM-as-judge.
+    The reliability of the LLM-as-judge is evaluated by having a set of human-evaluated examples (at least 30 ideally, time permitting) used to compute the Spearman correlation.
+
