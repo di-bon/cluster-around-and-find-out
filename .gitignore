@@ -1,3 +1,10 @@
 *.pdf
 !docs/progress_report.pdf
 .DS_Store
+
+.env
+example.txt
+
+datasets/
+
+__pycache__/
