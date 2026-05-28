@@ -13,26 +13,19 @@ This is different than assessing whether a clustering algorithm actually produce
 
 ## Metrics
 
-The metrics that will be evaluated are:
+The metrics that will be evaluated are about the conversation quality.
+To assess this, we measure:
 
-1. clustering quality:
-the solhouette score is computed on the identified clusters.
-This metric is only used as a sanity check, ensuring that no edge cases are produced (i.e. one cluster for each datapoint, or just a single cluster is produced as the result).
+1. efficiency: 
+for each run, the turns to convergence and tokens exchanged are measured.
+Lower turns/fewer tokens are preferred, as the system can be perceived as easier to use for humans, requiring less cognitive load to express the clustering preferences.
 
-1. Conversation quality:
-this is the core of this study.
-It it composed of multiple metrics:
+1. question clarity:
+the number of tokens used by the user to generate an answer.
+Fewer tokens are an indication of a clearer, better question.
 
-    1. efficiency: 
-    for each run, the turns to convergence and tokens exchanged are measured.
-    Lower turns/fewer tokens are preferred, as the system can be perceived as easier to use for humans, requiring less cognitive load to express the clustering preferences.
-
-    1. question clarity:
-    the number of tokens used by the user to generate an answer.
-    Fewer tokens are an indication of a clearer, better question.
-
-    1. faithfulness:
-    check whether the final result refelects the user preferences.
-    This is measured using a Likert scale (from 1 to 5), using an LLM-as-judge.
-    The reliability of the LLM-as-judge is evaluated by having a set of human-evaluated examples (at least 30 ideally, time permitting) used to compute the Spearman correlation.
+1. faithfulness:
+check whether the final result refelects the user preferences.
+This is measured using a Likert scale (from 1 to 5), using an LLM-as-judge.
+The reliability of the LLM-as-judge is evaluated by having a set of human-evaluated examples (at least 30 ideally, time permitting) used to compute the Spearman correlation.
 
