@@ -1,10 +1,16 @@
 # Related work
 
-v1 - 2026-05-21
+v2 - 2026-05-28
 
 This document contains a brief summary of some papers about clustering and user interaction in natural language.
 
 ## Changelog
+
+### v2 (2026-05-28)
+
+- Papers read and added:
+    
+    - NV-Embed: Improved Techniques for Training LLMs as Generalist Embedding Models
 
 ### v1 (2026-05-21)
 
@@ -328,3 +334,13 @@ Paper: https://aclanthology.org/2024.acl-long.642.pdf
 This paper proposed a method to create embeddings that are coherent with the context of the documents, 
 and to ajust the embeddings so that they take into account the user's preferences (based on the instruction passed to the encoder),
 The result of this paper is `e5-mistral-7b-instruct`, which can be easily adapted to other tasks without the need of fine-tuning it.
+
+## 11. NV-Embed: Improved Techniques for Training LLMs as Generalist Embedding Models
+
+Paper: https://arxiv.org/pdf/2405.17428
+
+**Takeaways**: generate good embeddings by taking into account user's preferences.
+
+This paper introduces a method to create text embeddings by using decoder-only LLMs.
+It achieves this by replacing causal masks with bidirectional attention, introducing a latent attention layer for vector pooling, and utilizing a two-stage instruction-tuning process.
+It ranks 1st on the Massive Text Embedding Benchmark.
