@@ -22,14 +22,26 @@ def make_client(model_name: str) -> tuple[OpenAI, str]:
 
 
 class ClusteringInterviewAgent:
-    def __init__(self, dataset_summary: str, model_name: str = "qwen3.6:35b"):
+    def __init__(
+        self,
+        dataset_summary: str,
+        model_name: str = "qwen3.6:35b",
+        interview_type: str = "free",
+    ):
+        valid_interview_types = {"free", "yes_no", "multiple_choice", "open_questions"}
+        if interview_type not in valid_interview_types:
+            raise ValueError(f"interview_type: {interview_type} not valid.")
+
+        if interview_type == "free":
+            prompt = get_prompt("interview.md")
+        else:
+            prompt = get_prompt(f"interview_{interview_type}.md")
+
         self.client, self.model_name = make_client(model_name)
         self.messages = [
             {
                 "role": "system",
-                "content": get_prompt("interview.md").format(
-                    dataset_summary=dataset_summary
-                ),
+                "content": prompt.format(dataset_summary=dataset_summary),
             }
         ]
         self.ready_to_summarize = False

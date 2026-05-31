@@ -1,0 +1,2 @@
+{"timestamp": "20260531-135915"}
+{"run_id": "5c08ebb6", "seed": 2082655408, "config_hash": "ad67de84", "llm_model": "gpt-4o-mini", "embedding_model": "qwen3-embedding:8b", "inputs": {"user": "I want to cluster the questions based on the programming language"}, "outputs": {}, "errors": "", "timestamp": "20260531-135924"}
