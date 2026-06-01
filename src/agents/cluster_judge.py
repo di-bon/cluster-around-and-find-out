@@ -7,6 +7,24 @@ from data.judgement_result import JudgementResult
 from utils.prompt_loader import get_prompt
 
 
+def make_client(model_name: str) -> tuple[OpenAI, str]:
+    openai_models = {"gpt-4o"}
+    if model_name in openai_models:
+        return OpenAI(
+            base_url=os.environ["GITHUB_BASE_URL"],
+            api_key=os.environ["GITHUB_TOKEN"],
+        ), model_name
+
+    if "OPENROUTER_API_URL" in os.environ:
+        return OpenAI(
+            base_url=os.environ["OPENROUTER_API_URL"],
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        ), model_name
+
+    # Fallback to local Ollama instance
+    return OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama"), model_name
+
+
 class ClusterJudge:
     """
     Evaluates clustering quality using an LLM as judge.
@@ -22,12 +40,12 @@ class ClusterJudge:
 
     def __init__(
         self,
-        model_name: str = "gpt-4o-mini",
+        model_name: str = "gpt-4o",
         examples_per_cluster: int = 20,
     ):
         self.model_name = model_name
         self.examples_per_cluster = examples_per_cluster
-        self.client = OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama")
+        self.client = make_client(self.model_name)
 
     def evaluate(
         self,

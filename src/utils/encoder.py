@@ -8,10 +8,22 @@ from openai import OpenAI
 def make_encoder_client(
     model_name: str, nvidia_api_key: str, nvidia_base_url: str
 ) -> tuple:
-    """Returns (client, backend) where backend is 'nvidia' or 'ollama'."""
+    """Returns (client, backend) where backend is 'nvidia', 'openrouter', or 'ollama'."""
+
+    # 1. Check if the model belongs to the Nvidia family
     if model_name.startswith("nvidia/") or model_name.startswith("NV-Embed"):
         client = OpenAI(api_key=nvidia_api_key, base_url=nvidia_base_url)
         return client, "nvidia"
+
+    # 2. If not Nvidia, check for OpenRouter configuration
+    if "OPENROUTER_API_URL" in os.environ:
+        client = OpenAI(
+            base_url=os.environ["OPENROUTER_API_URL"],
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        )
+        return client, "openrouter"
+
+    # 3. Fallback if neither applies
     return None, "ollama"
 
 

@@ -1,2 +1,0 @@
-{"timestamp": "20260531-174722"}
-{"run_id": "b21a9405", "seed": 3835839434, "config_hash": "fc4faa0f", "llm_model": "qwen3.6:35b", "embedding_model": "qwen3-embedding:8b", "inputs": {"user": "I want to cluster the questions based on their technology (i.e. programming langauge, platform, program, etc.). A question can only be assigned to exactly one cluster"}, "outputs": {}, "errors": "", "timestamp": "20260531-174805"}

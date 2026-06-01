@@ -18,30 +18,19 @@ from utils.log_step import ExperimentLogger
 
 
 def run_experiment(interview_type: str):
-    # --- CONFIG ---
 
+    # --- CONFIG ---
     RUN_ID = secrets.token_hex(4)  # Generates a clean, short unique ID like "a3f2b1c0"
     SEED = secrets.randbits(32)
-
-    # Dataset
 
     DATASET_DIR = "datasets/stackoverflow"
     TITLES_URL = "https://raw.githubusercontent.com/jacoxu/StackOverflow/master/rawText/title_StackOverflow.txt"
     TITLES_PATH = os.path.join(DATASET_DIR, "title_StackOverflow.txt")
-    SAMPLE_SIZE = 500  # set it to None to use the full dataset
+    SAMPLE_SIZE = None  # set it to None to use the full dataset
     N_CLUSTERS_SUMMARY = 10
     EXAMPLES_PER_CLUSTER_SUMMARY = 3
-
-    # LLM
-
-    LLM_MODEL = "qwen3.6:35b"
-
-    # Embeddings
-
-    # EMBEDDING_MODEL = "nvidia/nv-embed-v1"
-    # EMBEDDING_MODEL = "hellord/e5-mistral-7b-instruct:Q4_0"
-    # EMBEDDING_MODEL = "hellord/e5-mistral-7b-instruct:Q8_0"
-    EMBEDDING_MODEL = "qwen3-embedding:8b"
+    LLM_MODEL = os.environ.get("LLM_MODEL", "qwen3.6:35b")
+    EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "qwen3-embedding:8b")
     NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
     NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "")
 
@@ -134,7 +123,7 @@ def run_experiment(interview_type: str):
     encoder = Encoder(EMBEDDING_MODEL, NVIDIA_API_KEY, NVIDIA_BASE_URL)
 
     print("\n🔄 Generating vectors...")
-    document_embeddings = encoder.embed_documents(extended_documents)
+    document_embeddings = encoder.embed_documents(extended_documents, use_cache=False)
     print(f"   Embedding matrix shape: {document_embeddings.shape}")
 
     has_rows = document_embeddings.shape[0] > 0

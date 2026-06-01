@@ -18,6 +18,24 @@ from utils.prompt_loader import get_prompt
 # ---------------------------------------------------------------------------
 
 
+def make_client(model_name: str) -> tuple[OpenAI, str]:
+    openai_models = {"gpt-4o"}
+    if model_name in openai_models:
+        return OpenAI(
+            base_url=os.environ["GITHUB_BASE_URL"],
+            api_key=os.environ["GITHUB_TOKEN"],
+        ), model_name
+
+    if "OPENROUTER_API_URL" in os.environ:
+        return OpenAI(
+            base_url=os.environ["OPENROUTER_API_URL"],
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        ), model_name
+
+    # Fallback to local Ollama instance
+    return OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama"), model_name
+
+
 class SimulatedUser:
     """
     Wraps an OpenAI-compatible LLM to simulate a human user in the
@@ -46,7 +64,7 @@ class SimulatedUser:
         self.goal = goal or rng.choice(GOALS)
         self.persona = persona or rng.choice(PERSONAS)
         self.model_name = model_name
-        self.client = OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama")
+        self.client, _ = make_client(self.model_name)
         self._history: list[dict] = []
         self._system = get_prompt("simulated_user/system_prompt.md").format(
             persona=self.persona, goal=self.goal

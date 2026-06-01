@@ -18,6 +18,14 @@ def make_client(model_name: str) -> tuple[OpenAI, str]:
             base_url=os.environ["GITHUB_BASE_URL"],
             api_key=os.environ["GITHUB_TOKEN"],
         ), model_name
+
+    if "OPENROUTER_API_URL" in os.environ:
+        return OpenAI(
+            base_url=os.environ["OPENROUTER_API_URL"],
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        ), model_name
+
+    # Fallback to local Ollama instance
     return OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama"), model_name
 
 
@@ -25,7 +33,7 @@ class ClusteringInterviewAgent:
     def __init__(
         self,
         dataset_summary: str,
-        model_name: str = "qwen3.6:35b",
+        model_name: str = "qwen3.6:35b",  # use fallback value compatible with ollama
         interview_type: str = "free",
     ):
         valid_interview_types = {"free", "yes_no", "multiple_choice", "open_questions"}
@@ -54,13 +62,20 @@ class ClusteringInterviewAgent:
         key = self._cluster_cache_key(records)
         self._label_cache.pop(key, None)
 
-    def _chat(self, messages: list[dict], **kwargs) -> str:
+    def _chat(
+        self, messages: list[dict], extra_body: dict | None = None, **kwargs
+    ) -> str:
         """Central method for all LLM calls."""
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=messages,
-            **kwargs,
-        )
+        api_kwargs = {
+            "model": self.model_name,
+            "messages": messages,
+            **kwargs,  # Unpack any other incoming keyword arguments
+        }
+
+        if extra_body is not None:
+            api_kwargs["extra_body"] = extra_body
+
+        response = self.client.chat.completions.create(**api_kwargs)
         return response.choices[0].message.content.strip()
 
     def chat(self, user_input: str) -> str:
