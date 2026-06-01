@@ -12,6 +12,7 @@ from agents.cluster_judge import ClusterJudge
 from agents.clustering_interview_agent import ClusteringInterviewAgent
 from data.document_registry import DocumentRegistry
 from utils.clustering import build_cluster_index, run_clustering
+from utils.compute_baseline import run_baseline
 from utils.data_loader import build_dataset_summary, download_dataset, load_dataset
 from utils.encoder import Encoder
 from utils.log_step import ExperimentLogger
@@ -79,6 +80,7 @@ def run_experiment(interview_type: str):
 
     turns = 0
     total_tokens = 0
+    total_user_tokens = 0
 
     while not agent.ready_to_summarize:
         user_msg = input("\nYou: ")
@@ -107,6 +109,7 @@ def run_experiment(interview_type: str):
                 else 0
             )
 
+        total_user_tokens += user_tokens
         total_tokens += user_tokens + reply_tokens
 
     instruction = agent.get_embedding_instruction()
@@ -117,7 +120,7 @@ def run_experiment(interview_type: str):
     extended_documents = [f"{instruction}{doc}" for doc in documents]
 
     user_preference = agent.get_user_preference()
-    print("\n 🦆 User preference: \n{user_preference}\n")
+    print(f"\n 🦆 User preference: \n{user_preference}\n")
     logger.log_step(inputs={}, outputs={"user_preference": user_preference})
 
     encoder = Encoder(EMBEDDING_MODEL, NVIDIA_API_KEY, NVIDIA_BASE_URL)
@@ -177,8 +180,8 @@ def run_experiment(interview_type: str):
         for doc in docs:
             print(f"    • {doc[:80]}")  # truncate long documents for readability
 
-    registry = DocumentRegistry(documents, document_embeddings, labels)
-    agent.print_clustering_report(user_preference, registry)
+    # registry = DocumentRegistry(documents, document_embeddings, labels)
+    # agent.print_clustering_report(user_preference, registry)
 
     judge = ClusterJudge(model_name=LLM_MODEL)
     judgement = judge.evaluate(user_preference=user_preference, clusters=clusters)
@@ -187,6 +190,7 @@ def run_experiment(interview_type: str):
     print("\nMETRICS\n")
     print(f"\nTurns: {turns}")
     print(f"\nTotal tokens: {total_tokens}")
+    print(f"\nTotal user tokens: {total_user_tokens}")
     print(f"\nJudgement:")
     print(f"\n  Coherence: {judgement.coherence}")
     print(f"\n  Alignment: {judgement.alignment}")
@@ -200,6 +204,7 @@ def run_experiment(interview_type: str):
             "metrics": {
                 "turns": turns,
                 "total_tokens": total_tokens,
+                "total_user_tokens": total_user_tokens,
                 "judgement": {
                     "coherence": judgement.coherence,
                     "alignment": judgement.alignment,
@@ -209,6 +214,15 @@ def run_experiment(interview_type: str):
                 },
             }
         }
+    )
+
+    run_baseline(
+        documents=documents,
+        encoder=encoder,
+        agent=agent,
+        judge=judge,
+        logger=logger,
+        user_preference=user_preference,
     )
 
 

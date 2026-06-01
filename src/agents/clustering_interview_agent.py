@@ -66,6 +66,10 @@ class ClusteringInterviewAgent:
         self, messages: list[dict], extra_body: dict | None = None, **kwargs
     ) -> str:
         """Central method for all LLM calls."""
+        # Disable Qwen3 thinking mode explicitly
+        if extra_body is None:
+            extra_body = {"reasoning": {"enabled": False}}
+
         api_kwargs = {
             "model": self.model_name,
             "messages": messages,
@@ -117,8 +121,11 @@ class ClusteringInterviewAgent:
     ) -> dict:
         """
         Asks the LLM to pick an algorithm + params given the conversation history
-        and basic dataset statistics.
+        and basic dataset statistics. Retries up to MAX_RETRIES times if the
+        response is not valid JSON.
         """
+        MAX_RETRIES = 2
+
         user_turn = (
             f"User preference summary:\n{user_preference}\n\n"
             f"Dataset statistics:\n"
@@ -128,18 +135,46 @@ class ClusteringInterviewAgent:
         )
 
         selector_messages = self.messages + [{"role": "user", "content": user_turn}]
-        raw = self._chat(messages=selector_messages)
 
-        # Strip accidental markdown fences the model might add despite instructions
-        raw = (
-            raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        last_error = None
+        for attempt in range(1, MAX_RETRIES + 1):
+            raw = self._chat(messages=selector_messages)
+            raw = (
+                raw.removeprefix("```json")
+                .removeprefix("```")
+                .removesuffix("```")
+                .strip()
+            )
+
+            try:
+                config = json.loads(raw)
+                if attempt > 1:
+                    print(f"✅ JSON parsed successfully on attempt {attempt}.")
+                print(f"\n🤖 Algorithm chosen: {config['algorithm']}")
+                print(f"   Rationale: {config['rationale']}")
+                print(f"   Params:    {config['params']}")
+                return config
+            except json.JSONDecodeError as e:
+                last_error = e
+                print(f"⚠️  Attempt {attempt}/{MAX_RETRIES} — invalid JSON: {e}")
+                if attempt < MAX_RETRIES:
+                    # Feed the bad output back so the model understands what went wrong
+                    selector_messages = selector_messages + [
+                        {"role": "assistant", "content": raw},
+                        {
+                            "role": "user",
+                            "content": (
+                                f"Your response was not valid JSON (error: {e}). "
+                                "Please reply with only the raw JSON object, "
+                                "no markdown fences, no explanation."
+                            ),
+                        },
+                    ]
+
+        raise ValueError(
+            f"Failed to get valid JSON after {MAX_RETRIES} attempts. "
+            f"Last error: {last_error}\nLast raw response:\n{raw}"
         )
-
-        config = json.loads(raw)
-        print(f"\n🤖 Algorithm chosen: {config['algorithm']}")
-        print(f"   Rationale: {config['rationale']}")
-        print(f"   Params:    {config['params']}")
-        return config
 
     def label_cluster(
         self,

@@ -45,7 +45,7 @@ class ClusterJudge:
     ):
         self.model_name = model_name
         self.examples_per_cluster = examples_per_cluster
-        self.client = make_client(self.model_name)
+        self.client, _ = make_client(self.model_name)
 
     def evaluate(
         self,
@@ -84,6 +84,7 @@ class ClusterJudge:
                 {"role": "user", "content": prompt},
             ],
             temperature=0.0,  # deterministic scoring
+            extra_body={"reasoning": {"enabled": False}},
         )
 
         raw = response.choices[0].message.content.strip()

@@ -22,7 +22,8 @@ Here is a summary of the dataset you will be working with:
    > If neither yes nor no captures your intent, feel free to explain.
 4. Do NOT ask multiple questions at once. Do NOT assume or guess their intent.
 5. Do NOT ask questions about the naming of the clusters, only about the contents of them.
-6. Once you have a crystal-clear, exhaustive understanding of their sorting
+6. **Strict Efficiency Cap:** You are allowed a absolute maximum of 10 total questions across the entire conversation, but you should aim for far fewer (e.g., 3 to 5) if the user's intent becomes clear early on.
+7. Once you have a sufficient understanding of their sorting
    preferences, STOP asking questions. Your very next response must start
    exactly with the trigger word: [READY_TO_SUMMARIZE]. DON'T ask the user
    to take any further action when you are ready to summarize.

@@ -44,6 +44,7 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     from data.document_registry import DocumentRegistry
     from prompts.simulated_user.config import GOALS, PERSONAS
     from utils.clustering import build_cluster_index, run_clustering
+    from utils.compute_baseline import run_baseline
     from utils.data_loader import build_dataset_summary, download_dataset, load_dataset
     from utils.encoder import Encoder
     from utils.log_step import ExperimentLogger
@@ -133,8 +134,9 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     # ---- Conversation loop ---------------------------------------------------
     turns = 0
     total_tokens = 0
+    total_user_tokens = 0
     agent_message = opening
-    MAX_TURNS = 30  # safety cap
+    MAX_TURNS = 20  # safety cap
 
     while not agent.ready_to_summarize:
         user_reply = user.respond(agent_message)
@@ -150,6 +152,7 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
 
         turns += 1
         total_tokens += count_tokens(user_reply)
+        total_user_tokens += count_tokens(user_reply)
         if "[READY_TO_SUMMARIZE]" not in agent_message:
             total_tokens += count_tokens(agent_message)
 
@@ -214,8 +217,8 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
         outputs={"clusters": clusters},
     )
 
-    registry = DocumentRegistry(documents, document_embeddings, labels)
-    agent.print_clustering_report(user_preference, registry)
+    # registry = DocumentRegistry(documents, document_embeddings, labels)
+    # agent.print_clustering_report(user_preference, registry)
 
     # ---- Judge ---------------------------------------------------------------
     judge = ClusterJudge(model_name=LLM_MODEL)
@@ -228,6 +231,7 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     metrics = {
         "turns": turns,
         "total_tokens": total_tokens,
+        "total_user_tokens": total_user_tokens,
         "judgement": {
             "coherence": judgement.coherence,
             "alignment": judgement.alignment,
@@ -242,6 +246,15 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     print(
         f"\n[run {run_index} | {RUN_ID}] turns={turns} tokens={total_tokens} "
         f"mean_score={judgement.mean_score:.2f}"
+    )
+
+    run_baseline(
+        documents=documents,
+        encoder=encoder,
+        agent=agent,
+        judge=judge,
+        logger=exp_logger,
+        user_preference=user_preference,
     )
 
     return {
