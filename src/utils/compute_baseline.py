@@ -41,6 +41,7 @@ def run_baseline(
             "n_documents": len(documents),
             "instruction": None,
             "user_preference": user_preference,
+            "clusters": logger.format_clusters_for_logging(clusters),
         },
         outputs={
             "metrics": {

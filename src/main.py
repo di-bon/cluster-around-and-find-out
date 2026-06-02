@@ -200,6 +200,13 @@ def run_experiment(interview_type: str):
     print("\n" + "=" * 70)
 
     logger.log_step(
+        inputs={
+            "condition": "baseline",
+            "n_documents": len(documents),
+            "instruction": None,
+            "user_preference": user_preference,
+            "clusters": logger.format_clusters_for_logging(clusters),
+        },
         outputs={
             "metrics": {
                 "turns": turns,
@@ -213,7 +220,7 @@ def run_experiment(interview_type: str):
                     "mean_score": judgement.mean_score,
                 },
             }
-        }
+        },
     )
 
     run_baseline(

@@ -241,7 +241,18 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
         },
     }
 
-    exp_logger.log_step(outputs={"metrics": metrics})
+    exp_logger.log_step(
+        inputs={
+            "condition": f"interview_{interview_type}",
+            "n_documents": len(documents),
+            "instruction": instruction,
+            "user_preference": user_preference,
+            "clusters": exp_logger.format_clusters_for_logging(clusters),
+        },
+        outputs={
+            "metrics": metrics,
+        },
+    )
 
     print(
         f"\n[run {run_index} | {RUN_ID}] turns={turns} tokens={total_tokens} "

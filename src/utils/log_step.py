@@ -61,3 +61,27 @@ class ExperimentLogger:
         Logs the metrics for the current run
         """
         logger.bind(run_id=self.run_id, turns=turns, total_tokens=total_tokens).info("")
+
+    def format_clusters_for_logging(self, clusters: dict[int, list[str]]):
+        """
+        Transforms a dictionary of clusters into a structured list of tuples
+        suitable for heavy logging.
+
+        Parameters:
+        - clusters (dict): A dictionary where keys are cluster IDs (int) and
+                           values are lists of documents (strings).
+
+        Returns:
+        - list of tuples: Each tuple is (cluster_id, cluster_title, [documents])
+        """
+        logged_clusters = []
+
+        # Sort by cluster_id to ensure consistent, readable log order
+        for cluster_id, docs in sorted(clusters.items()):
+            # Determine the user-friendly title
+            title = "Noise" if cluster_id == -1 else f"Cluster {cluster_id}"
+
+            # Append the full data structure (keeping entire doc strings intact)
+            logged_clusters.append((cluster_id, title, list(docs)))
+
+        return logged_clusters
