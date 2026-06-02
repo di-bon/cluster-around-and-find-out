@@ -1,15 +1,16 @@
 """
-run_batch.py — Run the clustering pipeline N times in parallel,
-replacing the interactive input() loop with a SimulatedUser LLM.
+run_batch.py — Run the clustering pipeline in parallel,
+executing across all pairs of (persona, goal).
 
 Usage:
-    python run_batch.py                                      # 30 runs, 6 workers, free interview
-    python run_batch.py --runs 10                            # 10 runs
-    python run_batch.py --runs 50 --workers 10
-    python run_batch.py --interview_type multiple_choice     # specific interview type
+    python run_batch.py                                     # Runs ALL (persona, goal) combinations
+    python run_batch.py --workers 6                         # Runs all combinations with 6 parallel workers
+    python run_batch.py --runs 10                           # Caps the run at the first 10 combinations
+    python run_batch.py --interview_type multiple_choice     # Specific interview type
 """
 
 import argparse
+import itertools
 import os
 import pathlib
 import secrets
@@ -28,7 +29,9 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 
 
-def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
+def run_once(
+    run_index: int, interview_type: str, persona_index: int, goal_index: int
+) -> dict:
     """
     Execute one full pipeline run with a SimulatedUser driving the chat loop.
     Returns a summary dict with run metadata and metrics.
@@ -77,7 +80,9 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     }
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    exp_logger = ExperimentLogger(timestamp, RUN_ID, SEED, CONFIG, "logs")
+    exp_logger = ExperimentLogger(
+        timestamp, RUN_ID, SEED, CONFIG, f"logs/{interview_type}"
+    )
 
     # ---- Tokenizer -----------------------------------------------------------
     if "gpt" in LLM_MODEL:
@@ -110,16 +115,21 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
         model_name=LLM_MODEL,
         interview_type=interview_type,
     )
+
+    # Safely index goals and personas using modulo just in case, though combinations should be precise
     goal = GOALS[goal_index % len(GOALS)]
-    # PERSONAS only has one entry for now; kept as a list for future expansion
-    persona = PERSONAS[0]
+    persona = PERSONAS[persona_index % len(PERSONAS)]
+
     user = SimulatedUser(model_name=LLM_MODEL, seed=SEED, goal=goal, persona=persona)
 
-    print(f"[run {run_index} | {RUN_ID}] SimulatedUser: {user}")
+    print(
+        f"[run {run_index} | {RUN_ID}] SimulatedUser (Persona Index: {persona_index}, Goal Index: {goal_index}): {user}"
+    )
     exp_logger.log_step(
         outputs={
             "simulated_user": {
                 "persona": user.persona,
+                "persona_index": persona_index,
                 "goal": user.goal,
                 "goal_index": goal_index,
             }
@@ -217,9 +227,6 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
         outputs={"clusters": clusters},
     )
 
-    # registry = DocumentRegistry(documents, document_embeddings, labels)
-    # agent.print_clustering_report(user_preference, registry)
-
     # ---- Judge ---------------------------------------------------------------
     judge = ClusterJudge(model_name=LLM_MODEL)
     judgement = judge.evaluate(user_preference=user_preference, clusters=clusters)
@@ -273,6 +280,8 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
         "run_id": RUN_ID,
         "seed": SEED,
         "interview_type": interview_type,
+        "persona_index": persona_index,
+        "goal_index": goal_index,
         "user_goal": user.goal,
         "user_persona": user.persona,
         "user_preference": user_preference,
@@ -284,13 +293,16 @@ def run_once(run_index: int, interview_type: str, goal_index: int) -> dict:
     }
 
 
-def run_once_safe(run_index: int, interview_type: str, goal_index: int) -> dict:
+def run_once_safe(
+    run_index: int, interview_type: str, persona_index: int, goal_index: int
+) -> dict:
     """Wrapper that catches exceptions so one failed run doesn't abort the batch."""
     try:
-        return run_once(run_index, interview_type, goal_index)
+        return run_once(run_index, interview_type, persona_index, goal_index)
     except Exception as exc:  # noqa: BLE001
         return {
             "run_index": run_index,
+            "persona_index": persona_index,
             "goal_index": goal_index,
             "status": "error",
             "error": str(exc),
@@ -305,10 +317,13 @@ def run_once_safe(run_index: int, interview_type: str, goal_index: int) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Batch-run the clustering pipeline with a simulated user."
+        description="Batch-run the clustering pipeline across all persona and goal combinations."
     )
     parser.add_argument(
-        "--runs", type=int, default=30, help="Number of runs (default: 30)"
+        "--runs",
+        type=int,
+        default=None,
+        help="Cap maximum number of runs (defaults to all combinations)",
     )
     parser.add_argument(
         "--workers", type=int, default=1, help="Parallel workers (default: 1)"
@@ -322,9 +337,24 @@ def main():
     )
     args = parser.parse_args()
 
+    # Import configuration directly here to setup the Cartesian combinations
+    from prompts.simulated_user.config import GOALS, PERSONAS
+
+    # Generate all pairs of (persona_index, goal_index)
+    all_combinations = list(itertools.product(range(len(PERSONAS)), range(len(GOALS))))
+    total_combinations = len(all_combinations)
+
+    # Determine how many tasks we actually execute
+    if args.runs is not None:
+        tasks_to_run = all_combinations[: args.runs]
+        total_runs = len(tasks_to_run)
+    else:
+        tasks_to_run = all_combinations
+        total_runs = total_combinations
+
     root_logger.info(
-        f"Starting batch: {args.runs} runs, {args.workers} workers, "
-        f"interview_type={args.interview_type}"
+        f"Starting batch: {total_runs} runs requested (out of {total_combinations} total persona-goal pairs), "
+        f"{args.workers} workers, interview_type={args.interview_type}"
     )
     t0 = time.time()
 
@@ -334,10 +364,12 @@ def main():
 
     with jsonlines.open(out_path, mode="w") as writer:
         with ProcessPoolExecutor(max_workers=args.workers) as pool:
+            # Submit each distinct combination to the pool
             futures = {
-                pool.submit(run_once_safe, i, args.interview_type, i): i
-                for i in range(args.runs)
+                pool.submit(run_once_safe, idx, args.interview_type, p_idx, g_idx): idx
+                for idx, (p_idx, g_idx) in enumerate(tasks_to_run)
             }
+
             for future in as_completed(futures):
                 result = future.result()
                 writer.write(result)  # flushed immediately — safe even if batch crashes
@@ -345,12 +377,14 @@ def main():
                 if result["status"] == "error":
                     failed += 1
                     root_logger.error(
-                        f"Run {result['run_index']} FAILED: {result['error']}"
+                        f"Run {result['run_index']} (Persona: {result['persona_index']}, Goal: {result['goal_index']}) FAILED: {result['error']}"
                     )
                 else:
                     m = result["metrics"]
                     root_logger.info(
                         f"Run {result['run_index']} ({result['run_id']}) done — "
+                        f"Persona={result['persona_index']} "
+                        f"Goal={result['goal_index']} — "
                         f"clusters={result['n_clusters']} "
                         f"turns={m['turns']} "
                         f"tokens={m['total_tokens']} "
@@ -361,7 +395,7 @@ def main():
     elapsed = time.time() - t0
     root_logger.info(
         f"Batch complete in {elapsed:.1f}s — "
-        f"{args.runs - failed}/{args.runs} succeeded, {failed} failed. "
+        f"{total_runs - failed}/{total_runs} succeeded, {failed} failed. "
         f"Results written to {out_path}"
     )
 
