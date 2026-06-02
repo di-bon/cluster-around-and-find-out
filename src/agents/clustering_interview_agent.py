@@ -1,5 +1,6 @@
 import json
 import os
+import random
 
 import numpy as np
 from openai import OpenAI
@@ -152,6 +153,9 @@ class ClusteringInterviewAgent:
                     print(f"✅ JSON parsed successfully on attempt {attempt}.")
                 print(f"\n🤖 Algorithm chosen: {config['algorithm']}")
                 print(f"   Rationale: {config['rationale']}")
+                if "params" in config:
+                    if "random_state" in config["params"]:
+                        config["params"]["random_state"] = random.randint(1, 100000)
                 print(f"   Params:    {config['params']}")
                 return config
             except json.JSONDecodeError as e:
