@@ -4,7 +4,7 @@ ollama
 # NV-Embed
 # Core ML Pipeline
 torch>=2.2.0
-transformers>=4.42.4,<=4.51.3
+# transformers>=4.42.4,<=4.51.3
 tokenizers>=0.19.1
 
 # Text Processing & Utilities
@@ -35,3 +35,11 @@ umap-learn
 openai
 # dotenv
 python-dotenv
+# logs
+loguru
+# for tokens count
+tiktoken
+# Qwen3 Embedding
+transformers>=4.51.0
+
+jsonlines

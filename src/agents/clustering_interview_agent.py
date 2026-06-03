@@ -1,77 +1,185 @@
-import ollama
-from utils.prompt_loader import get_prompt
 import json
+import os
+import random
+
+import numpy as np
+from openai import OpenAI
+
 from data.document_record import DocumentRecord
 from data.document_registry import DocumentRegistry
-from utils.encoder import Encoder
 from utils.clustering import run_clustering
-import numpy as np
+from utils.encoder import Encoder
+from utils.prompt_loader import get_prompt
+
+
+def make_client(model_name: str) -> tuple[OpenAI, str]:
+    openai_models = {"gpt-4o"}
+    if model_name in openai_models:
+        return OpenAI(
+            base_url=os.environ["GITHUB_BASE_URL"],
+            api_key=os.environ["GITHUB_TOKEN"],
+        ), model_name
+
+    if "OPENROUTER_API_URL" in os.environ:
+        return OpenAI(
+            base_url=os.environ["OPENROUTER_API_URL"],
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        ), model_name
+
+    # Fallback to local Ollama instance
+    return OpenAI(base_url=os.environ["OLLAMA_BASE_URL"], api_key="ollama"), model_name
+
 
 class ClusteringInterviewAgent:
-    def __init__(self, dataset_summary: str, model_name: str = "qwen3.6:35b"):
-        self.model_name = model_name
-        self.messages   = [{"role": "system", "content": get_prompt("interview.md").format(dataset_summary=dataset_summary)}]
+    def __init__(
+        self,
+        dataset_summary: str,
+        model_name: str = "qwen3.6:35b",  # use fallback value compatible with ollama
+        interview_type: str = "free",
+    ):
+        valid_interview_types = {"free", "yes_no", "multiple_choice", "open_questions"}
+        if interview_type not in valid_interview_types:
+            raise ValueError(f"interview_type: {interview_type} not valid.")
+
+        if interview_type == "free":
+            prompt = get_prompt("interview.md")
+        else:
+            prompt = get_prompt(f"interview_{interview_type}.md")
+
+        self.client, self.model_name = make_client(model_name)
+        self.messages = [
+            {
+                "role": "system",
+                "content": prompt.format(dataset_summary=dataset_summary),
+            }
+        ]
         self.ready_to_summarize = False
         self._label_cache: dict[frozenset, dict] = {}
 
     def _cluster_cache_key(self, records: list[DocumentRecord]) -> frozenset:
         return frozenset(r.id for r in records)
-    
+
     def invalidate_label_cache(self, records: list[DocumentRecord]) -> None:
         key = self._cluster_cache_key(records)
         self._label_cache.pop(key, None)
 
+    def _chat(
+        self, messages: list[dict], extra_body: dict | None = None, **kwargs
+    ) -> str:
+        """Central method for all LLM calls."""
+        # Disable Qwen3 thinking mode explicitly
+        if extra_body is None:
+            extra_body = {"reasoning": {"enabled": False}}
+
+        api_kwargs = {
+            "model": self.model_name,
+            "messages": messages,
+            **kwargs,  # Unpack any other incoming keyword arguments
+        }
+
+        if extra_body is not None:
+            api_kwargs["extra_body"] = extra_body
+
+        response = self.client.chat.completions.create(**api_kwargs)
+        return response.choices[0].message.content.strip()
+
     def chat(self, user_input: str) -> str:
         self.messages.append({"role": "user", "content": user_input})
-        response       = ollama.chat(model=self.model_name, messages=self.messages)
-        assistant_reply = response["message"]["content"]
+        assistant_reply = self._chat(self.messages)
         self.messages.append({"role": "assistant", "content": assistant_reply})
 
         if "[READY_TO_SUMMARIZE]" in assistant_reply:
             self.ready_to_summarize = True
         return assistant_reply
-    
-    def summarize_preferences(self) -> str:
+
+    def get_embedding_instruction(self) -> str:
         """
         Reuses the agent's conversation history and asks the LLM to distill
-        everything it learned into a single NV-Embed-v2 instruction string.
+        everything it learned into a single Qwen3-Embedding instruction string.
         """
-        # We append the summarizer prompt to a copy of the history 
+        # We append the summarizer prompt to a copy of the history
         # so we don't permanently contaminate self.messages with the meta-prompt.
-        summarizer_messages = self.messages + [
-            {"role": "user", "content": get_prompt("summarize.md")}
+        instruction_messages = self.messages + [
+            {"role": "user", "content": get_prompt("get_embedding_instruction.md")}
         ]
 
-        response = ollama.chat(model=self.model_name, messages=summarizer_messages)
-        summary = response['message']['content'].strip()
-        return summary
-    
-    def select_clustering_algorithm(self, n_documents: int, user_preference: str) -> dict:
+        instruction = self._chat(messages=instruction_messages)
+        return instruction
+
+    def get_user_preference(self) -> str:
+        """
+        Summarises the user preference based on the conversation
+        """
+        summarize_messages = self.messages + [
+            {"role": "user", "content": get_prompt("get_user_preference.md")}
+        ]
+
+        user_preference = self._chat(messages=summarize_messages)
+        return user_preference
+
+    def select_clustering_algorithm(
+        self, n_documents: int, user_preference: str
+    ) -> dict:
         """
         Asks the LLM to pick an algorithm + params given the conversation history
-        and basic dataset statistics.
+        and basic dataset statistics. Retries up to MAX_RETRIES times if the
+        response is not valid JSON.
         """
+        MAX_RETRIES = 2
+
         user_turn = (
             f"User preference summary:\n{user_preference}\n\n"
             f"Dataset statistics:\n"
             f"- Number of documents: {n_documents}\n"
-            f"- Embedding model: NV-Embed-v1 (4096-dim, cosine similarity)\n\n"
-            f"{get_prompt("select_algorithm.md")}"
+            f"- Embedding model: Qwen3-Embedding (4096-dim)\n\n"
+            f"{get_prompt('select_algorithm.md')}"
         )
 
         selector_messages = self.messages + [{"role": "user", "content": user_turn}]
-        response = ollama.chat(model=self.model_name, messages=selector_messages)
-        raw = response['message']['content'].strip()
 
-        # Strip accidental markdown fences the model might add despite instructions
-        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        last_error = None
+        for attempt in range(1, MAX_RETRIES + 1):
+            raw = self._chat(messages=selector_messages)
+            raw = (
+                raw.removeprefix("```json")
+                .removeprefix("```")
+                .removesuffix("```")
+                .strip()
+            )
 
-        config = json.loads(raw)
-        print(f"\n🤖 Algorithm chosen: {config['algorithm']}")
-        print(f"   Rationale: {config['rationale']}")
-        print(f"   Params:    {config['params']}")
-        return config
-    
+            try:
+                config = json.loads(raw)
+                if attempt > 1:
+                    print(f"✅ JSON parsed successfully on attempt {attempt}.")
+                print(f"\n🤖 Algorithm chosen: {config['algorithm']}")
+                print(f"   Rationale: {config['rationale']}")
+                if "params" in config:
+                    if "random_state" in config["params"]:
+                        config["params"]["random_state"] = random.randint(1, 100000)
+                print(f"   Params:    {config['params']}")
+                return config
+            except json.JSONDecodeError as e:
+                last_error = e
+                print(f"⚠️  Attempt {attempt}/{MAX_RETRIES} — invalid JSON: {e}")
+                if attempt < MAX_RETRIES:
+                    # Feed the bad output back so the model understands what went wrong
+                    selector_messages = selector_messages + [
+                        {"role": "assistant", "content": raw},
+                        {
+                            "role": "user",
+                            "content": (
+                                f"Your response was not valid JSON (error: {e}). "
+                                "Please reply with only the raw JSON object, "
+                                "no markdown fences, no explanation."
+                            ),
+                        },
+                    ]
+
+        raise ValueError(
+            f"Failed to get valid JSON after {MAX_RETRIES} attempts. "
+            f"Last error: {last_error}\nLast raw response:\n{raw}"
+        )
+
     def label_cluster(
         self,
         user_preference: str,
@@ -82,12 +190,12 @@ class ClusteringInterviewAgent:
         key = self._cluster_cache_key(records)
 
         if key in self._label_cache:
-            print(f"   💾 Cache hit — reusing label '{self._label_cache[key]['label']}'")
+            print(
+                f"   💾 Cache hit — reusing label '{self._label_cache[key]['label']}'"
+            )
             return self._label_cache[key]
 
-        sample_texts = "\n".join(
-            f"- {r.preview()}" for r in records[:sample_size]
-        )
+        sample_texts = "\n".join(f"- {r.preview()}" for r in records[:sample_size])
         user_turn = (
             f"User preference summary:\n{user_preference}\n\n"
             f"Documents in this cluster (sample of {min(sample_size, len(records))}):\n"
@@ -95,14 +203,15 @@ class ClusteringInterviewAgent:
             f"{get_prompt('cluster_labeller.md')}"
         )
         messages = self.messages + [{"role": "user", "content": user_turn}]
-        response = ollama.chat(model=self.model_name, messages=messages)
-        raw = response["message"]["content"].strip()
-        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        raw = self._chat(messages=messages)
+        raw = (
+            raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        )
         result = json.loads(raw)
 
         self._label_cache[key] = result
         return result
-    
+
     def print_clustering_report(
         self,
         user_preference: str,
@@ -113,6 +222,8 @@ class ClusteringInterviewAgent:
         Prints a structured report for a human evaluator:
         one section per cluster, with an LLM-generated label and document previews.
         """
+        result = []
+
         total = len(registry)
         cluster_ids = registry.cluster_ids
         print("\n" + "═" * 70)
@@ -129,18 +240,38 @@ class ClusteringInterviewAgent:
                     print(f"    [{r.id:>4}] {r.preview()}")
                 if docs_per_cluster is not None and len(records) > docs_per_cluster:
                     print(f"           … and {len(records) - docs_per_cluster} more")
+
+                result.append(
+                    {
+                        "cluster_id": cid,
+                        "cluster_name": "Noise Bucket",
+                        "cluster_description": "Documents classified as 'Noise', which could not be assigned to other clusters",
+                        "documents": records,
+                    }
+                )
+
                 continue
             # Ask LLM to name the cluster
             meta = self.label_cluster(user_preference, records)
-            print(f"\n  📂  Cluster {cid}  ·  {meta['label']}  ({len(records)} docs, {pct:.1f}%)")
+            print(
+                f"\n  📂  Cluster {cid}  ·  {meta['label']}  ({len(records)} docs, {pct:.1f}%)"
+            )
             print(f"      {meta['description']}")
             print("  " + "─" * 66)
             for r in records[:docs_per_cluster]:
                 print(f"    [{r.id:>4}] {r.preview()}")
             if docs_per_cluster is not None and len(records) > docs_per_cluster:
                 print(f"           … and {len(records) - docs_per_cluster} more")
+            result.append(
+                {
+                    "cluster_id": cid,
+                    "cluster_name": meta["label"],
+                    "cluster_description": meta.get("description", ""),
+                    "documents": records,
+                }
+            )
         print("\n" + "═" * 70)
-        print("  Review complete. Use registry.get_by_id(id) to inspect any document.")
+        print("  Review complete.")
         print("═" * 70 + "\n")
 
     def refine_instruction_for_cluster(
@@ -156,14 +287,13 @@ class ClusteringInterviewAgent:
             f"Original embedding instruction:\n{user_preference}\n\n"
             f"User's refinement request: {user_request}\n\n"
             f"Sample documents from this cluster:\n{sample}\n\n"
-            f"{get_prompt("instruction_refinement.md")}"
+            f"{get_prompt('instruction_refinement.md')}"
         )
         messages = self.messages + [{"role": "user", "content": user_turn}]
-        response = ollama.chat(model=self.model_name, messages=messages)
-        instruction = response["message"]["content"].strip()
+        instruction = self._chat(messages=messages)
         print(f"\n📐 New embedding instruction:\n   {instruction}")
         return instruction
-    
+
     def semantic_split_cluster(
         self,
         registry: DocumentRegistry,
@@ -182,17 +312,24 @@ class ClusteringInterviewAgent:
         """
         records = registry.get_by_cluster(cluster_id)
         if len(records) < n_splits:
-            print(f"⚠️  Only {len(records)} docs in cluster {cluster_id}, can't split into {n_splits}.")
+            print(
+                f"⚠️  Only {len(records)} docs in cluster {cluster_id}, can't split into {n_splits}."
+            )
             return registry
 
-        new_instruction = self.refine_instruction_for_cluster(user_preference, records, user_request)
+        new_instruction = self.refine_instruction_for_cluster(
+            user_preference, records, user_request
+        )
 
         # Step 2 — re-embed with the new instruction
         documents = [f"{new_instruction}{r.text}" for r in records]
         new_embeddings = encoder.embed_documents(documents)
 
         # Step 3 — cluster the new embeddings
-        sub_config = {"algorithm": "kmeans", "params": {"n_clusters": n_splits, "random_state": 42}}
+        sub_config = {
+            "algorithm": "kmeans",
+            "params": {"n_clusters": n_splits, "random_state": 42},
+        }
         sub_labels = run_clustering(new_embeddings, sub_config)
 
         # Step 4 — update registry: new embeddings + new cluster ids
@@ -202,18 +339,20 @@ class ClusteringInterviewAgent:
         id_map[0] = cluster_id  # reuse original id for first sub-cluster
 
         for record, sub_label, new_emb in zip(records, sub_labels, new_embeddings):
-            record.embedding = new_emb          # update the embedding in place
-            record.cluster   = id_map[int(sub_label)]
+            record.embedding = new_emb  # update the embedding in place
+            record.cluster = id_map[int(sub_label)]
 
         # Rebuild the registry's internal matrix to keep find_nearest consistent
         all_embeddings = np.array([r.embedding for r in registry._records])
-        registry._matrix = all_embeddings / np.linalg.norm(all_embeddings, axis=1, keepdims=True)
+        registry._matrix = all_embeddings / np.linalg.norm(
+            all_embeddings, axis=1, keepdims=True
+        )
 
         self.invalidate_label_cache(records)
 
         print(f"✅ Semantically split cluster {cluster_id} → {list(id_map.values())}.")
         return registry
-    
+
     def semantic_merge_clusters(
         self,
         user_preference: str,
@@ -231,7 +370,9 @@ class ClusteringInterviewAgent:
             records.extend(registry.get_by_cluster(cid))
 
         # Step 1 — get an instruction that reflects the user's merging rationale
-        new_instruction = self.refine_instruction_for_cluster(user_preference, records, user_request)
+        new_instruction = self.refine_instruction_for_cluster(
+            user_preference, records, user_request
+        )
 
         # Step 2 — re-embed the combined set
         documents = [f"{new_instruction}{r.text}" for r in records]
@@ -241,23 +382,26 @@ class ClusteringInterviewAgent:
         target = min(cluster_ids)
         for record, new_emb in zip(records, new_embeddings):
             record.embedding = new_emb
-            record.cluster   = target
+            record.cluster = target
 
         # Rebuild the registry's internal matrix
         all_embeddings = np.array([r.embedding for r in registry._records])
-        registry._matrix = all_embeddings / np.linalg.norm(all_embeddings, axis=1, keepdims=True)
+        registry._matrix = all_embeddings / np.linalg.norm(
+            all_embeddings, axis=1, keepdims=True
+        )
 
         self.invalidate_label_cache(records)
 
         print(f"✅ Semantically merged clusters {cluster_ids} → cluster {target}.")
         return registry
-    
+
     def parse_user_command(self, user_input: str) -> dict:
         messages = [
             {"role": "system", "content": get_prompt("command_parser.md")},
-            {"role": "user",   "content": user_input},
+            {"role": "user", "content": user_input},
         ]
-        response = ollama.chat(model=self.model_name, messages=messages)
-        raw = response["message"]["content"].strip()
-        raw = raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        raw = self._chat(messages=messages)
+        raw = (
+            raw.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        )
         return json.loads(raw)

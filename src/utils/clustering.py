@@ -1,9 +1,11 @@
-import numpy as np
-from utils.reduce_dimensions import reduce_dimensions
-from sklearn.cluster import KMeans, AgglomerativeClustering
 import hdbscan
+import numpy as np
+from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.preprocessing import normalize
+
 from data.document_registry import DocumentRegistry
+from utils.reduce_dimensions import reduce_dimensions
+
 
 def run_clustering(embeddings: np.ndarray, config: dict) -> np.ndarray:
     algo = config["algorithm"]
@@ -40,7 +42,10 @@ def run_clustering(embeddings: np.ndarray, config: dict) -> np.ndarray:
 
     return labels
 
-def build_cluster_index(documents: list[str], labels: np.ndarray) -> dict[int, list[str]]:
+
+def build_cluster_index(
+    documents: list[str], labels: np.ndarray
+) -> dict[int, list[str]]:
     """
     Returns a dict mapping cluster_id → list of documents in that cluster.
     Noise points (label == -1) are grouped under the key -1.
@@ -50,7 +55,10 @@ def build_cluster_index(documents: list[str], labels: np.ndarray) -> dict[int, l
         index.setdefault(int(label), []).append(doc)
     return index
 
-def merge_clusters(registry: DocumentRegistry, cluster_ids: list[int]) -> DocumentRegistry:
+
+def merge_clusters(
+    registry: DocumentRegistry, cluster_ids: list[int]
+) -> DocumentRegistry:
     """Reassigns all records in cluster_ids to the lowest id among them."""
     target = min(cluster_ids)
     for record in registry._records:
@@ -58,3 +66,4 @@ def merge_clusters(registry: DocumentRegistry, cluster_ids: list[int]) -> Docume
             record.cluster = target
     print(f"✅ Merged clusters {cluster_ids} → cluster {target}.")
     return registry
+
