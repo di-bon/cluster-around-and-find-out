@@ -26,6 +26,10 @@ Fewer tokens are an indication of a clearer, better question.
 
 1. faithfulness:
 check whether the final result refelects the user preferences.
-This is measured using a Likert scale (from 1 to 5), using an LLM-as-judge.
+This metrics is composed of multiple sub-metrics (listed below), all rated using a Likert scale (from 1 to 5), using an LLM-as-judge.
 The reliability of the LLM-as-judge is evaluated by having a set of human-evaluated examples (at least 30 ideally, time permitting) used to compute the Spearman correlation.
-
+Specifically, the measured sub-metrics are:
+    1. coherence: measures how semantically similar the documents of the same cluster are
+    1. alignment: measures if the clusters reflect the user's stated goal
+    1. separation: measures if the clusters are clearly different from one another
+Finally, these submetrics are grouped together by computing the mean score of them.
