@@ -51,6 +51,9 @@ class Sample:
     total_tokens: np.ndarray
     user_tokens: np.ndarray
     faithfulness: np.ndarray  # mean of coherence, alignment, separation
+    coherence: np.ndarray
+    alignment: np.ndarray
+    separation: np.ndarray
 
 
 # ── Loading ──────────────────────────────────────────────────────────────────
@@ -71,6 +74,9 @@ def parse_row(entry: dict) -> dict:
                 j.get("separation", np.nan),
             ]
         ),
+        "coherence": j.get("coherence", np.nan),
+        "alignment": j.get("alignment", np.nan),
+        "separation": j.get("separation", np.nan),
     }
 
 
@@ -117,6 +123,9 @@ def load_file(path: Path) -> tuple[Sample, Sample]:
             total_tokens=np.array([r["total_tokens"] for r in rows], dtype=float),
             user_tokens=np.array([r["user_tokens"] for r in rows], dtype=float),
             faithfulness=np.array([r["faithfulness"] for r in rows], dtype=float),
+            coherence=np.array([r["coherence"] for r in rows], dtype=float),
+            alignment=np.array([r["alignment"] for r in rows], dtype=float),
+            separation=np.array([r["separation"] for r in rows], dtype=float),
         )
 
     return (
@@ -163,6 +172,9 @@ OUTCOMES = [
     ("total_tokens", "Total tokens", True),
     ("user_tokens", "User response tokens", True),
     ("faithfulness", "Mean faithfulness score", False),
+    ("coherence", "  Coherence", False),
+    ("alignment", "  Alignment", False),
+    ("separation", "  Separation", False),
 ]
 
 
