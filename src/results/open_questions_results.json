@@ -1,0 +1,1300 @@
+{
+    "experiments": [
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 13,
+                        "total_tokens": 1696,
+                        "total_user_tokens": 861,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 11,
+                        "total_tokens": 1337,
+                        "total_user_tokens": 677,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 9,
+                        "total_tokens": 1504,
+                        "total_user_tokens": 511,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 5,
+                            "separation": 5,
+                            "mean_score": 4.666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 3,
+                            "separation": 3,
+                            "mean_score": 3.3333333333333335
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 947,
+                        "total_user_tokens": 539,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 964,
+                        "total_user_tokens": 589,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 1045,
+                        "total_user_tokens": 583,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 11,
+                        "total_tokens": 1274,
+                        "total_user_tokens": 633,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 904,
+                        "total_user_tokens": 335,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 868,
+                        "total_user_tokens": 454,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 13,
+                        "total_tokens": 1857,
+                        "total_user_tokens": 1055,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 4,
+                        "total_tokens": 475,
+                        "total_user_tokens": 322,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 14,
+                        "total_tokens": 1777,
+                        "total_user_tokens": 1018,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 20,
+                        "total_tokens": 2314,
+                        "total_user_tokens": 1035,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 1196,
+                        "total_user_tokens": 458,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 5,
+                            "separation": 5,
+                            "mean_score": 4.666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 714,
+                        "total_user_tokens": 423,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 1356,
+                        "total_user_tokens": 476,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 3,
+                        "total_tokens": 289,
+                        "total_user_tokens": 189,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 859,
+                        "total_user_tokens": 510,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 16,
+                        "total_tokens": 2269,
+                        "total_user_tokens": 770,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 10,
+                        "total_tokens": 1829,
+                        "total_user_tokens": 607,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 1170,
+                        "total_user_tokens": 443,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 20,
+                        "total_tokens": 2551,
+                        "total_user_tokens": 1217,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 20,
+                        "total_tokens": 3449,
+                        "total_user_tokens": 1520,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 813,
+                        "total_user_tokens": 450,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 4,
+                            "separation": 4,
+                            "mean_score": 4.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 1309,
+                        "total_user_tokens": 610,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 11,
+                        "total_tokens": 1597,
+                        "total_user_tokens": 315,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 11,
+                        "total_tokens": 1634,
+                        "total_user_tokens": 469,
+                        "judgement": {
+                            "coherence": 5,
+                            "alignment": 1,
+                            "separation": 5,
+                            "mean_score": 3.6666666666666665
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 1068,
+                        "total_user_tokens": 371,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 1308,
+                        "total_user_tokens": 462,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 3.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 1027,
+                        "total_user_tokens": 406,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 6,
+                        "total_tokens": 995,
+                        "total_user_tokens": 407,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 1,
+                            "mean_score": 1.3333333333333333
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 15,
+                        "total_tokens": 1808,
+                        "total_user_tokens": 1020,
+                        "judgement": {
+                            "coherence": 4,
+                            "alignment": 3,
+                            "separation": 4,
+                            "mean_score": 3.6666666666666665
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.3333333333333335
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 8,
+                        "total_tokens": 992,
+                        "total_user_tokens": 609,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 7,
+                        "total_tokens": 1037,
+                        "total_user_tokens": 435,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 9,
+                        "total_tokens": 1814,
+                        "total_user_tokens": 589,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 2,
+                            "separation": 2,
+                            "mean_score": 2.0
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "question_metrics": [
+                {
+                    "condition": "interview_open_questions",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 11,
+                        "total_tokens": 1771,
+                        "total_user_tokens": 826,
+                        "judgement": {
+                            "coherence": 3,
+                            "alignment": 2,
+                            "separation": 3,
+                            "mean_score": 2.6666666666666665
+                        }
+                    }
+                }
+            ],
+            "baseline_metrics": [
+                {
+                    "condition": "baseline",
+                    "n_documents": 500,
+                    "metrics": {
+                        "turns": 0,
+                        "total_tokens": 0,
+                        "total_user_tokens": 0,
+                        "judgement": {
+                            "coherence": 2,
+                            "alignment": 1,
+                            "separation": 2,
+                            "mean_score": 1.6666666666666667
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
