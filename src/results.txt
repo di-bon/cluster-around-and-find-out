@@ -1,0 +1,107 @@
+Loaded 'yes_no_results.json': 36 condition run(s), 36 baseline run(s).
+Loaded 'multiple_choice_results.json': 36 condition run(s), 36 baseline run(s).
+Loaded 'open_questions_results.json': 36 condition run(s), 36 baseline run(s).
+
+Bootstrap settings: 10,000 resamples, 95% CI, seed=2083521328
+
+════════════════════════════════════════════════════════════
+  STAGE 1 — Condition vs. Baseline (per question type)
+════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────
+  Question type: YES_NO_RESULTS
+
+  A = yes_no_results   vs   B = yes_no_results_baseline
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]    12.97     0.00      +12.972 [  +11.167,   +14.806]  ✗ B better
+  Total tokens                    1238.81     0.00    +1238.806 [+1015.245, +1476.037]  ✗ B better
+  User response tokens             338.69     0.00     +338.694 [ +254.720,  +430.584]  ✗ B better
+  Mean faithfulness score            2.20     1.98       +0.222 [   -0.148,    +0.602]  ~ no significant difference
+    Coherence                        2.58     2.44       +0.139 [   -0.194,    +0.500]  ~ no significant difference
+    Alignment                        1.75     1.58       +0.167 [   -0.222,    +0.583]  ~ no significant difference
+    Separation                       2.28     1.92       +0.361 [   -0.111,    +0.834]  ~ no significant difference
+
+────────────────────────────────────────────────────────────
+  Question type: MULTIPLE_CHOICE_RESULTS
+
+  A = multiple_choice_results   vs   B = multiple_choice_results_baseline
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]     7.83     0.00       +7.833 [   +6.889,    +8.833]  ✗ B better
+  Total tokens                    1196.42     0.00    +1196.417 [+1032.022, +1373.842]  ✗ B better
+  User response tokens             100.92     0.00     +100.917 [  +83.778,  +121.694]  ✗ B better
+  Mean faithfulness score            2.23     2.19       +0.037 [   -0.333,    +0.389]  ~ no significant difference
+    Coherence                        2.67     2.47       +0.194 [   -0.167,    +0.556]  ~ no significant difference
+    Alignment                        1.72     1.78       -0.056 [   -0.472,    +0.333]  ~ no significant difference
+    Separation                       2.31     2.33       -0.028 [   -0.500,    +0.389]  ~ no significant difference
+
+────────────────────────────────────────────────────────────
+  Question type: OPEN_QUESTIONS_RESULTS
+
+  A = open_questions_results   vs   B = open_questions_results_baseline
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]     9.64     0.00       +9.639 [   +8.278,   +11.111]  ✗ B better
+  Total tokens                    1383.81     0.00    +1383.806 [+1188.972, +1594.676]  ✗ B better
+  User response tokens             616.50     0.00     +616.500 [ +528.025,  +715.418]  ✗ B better
+  Mean faithfulness score            2.19     1.96       +0.231 [   -0.120,    +0.593]  ~ no significant difference
+    Coherence                        2.61     2.44       +0.167 [   -0.194,    +0.528]  ~ no significant difference
+    Alignment                        1.75     1.42       +0.333 [   -0.028,    +0.722]  ~ no significant difference
+    Separation                       2.22     2.03       +0.194 [   -0.222,    +0.639]  ~ no significant difference
+
+════════════════════════════════════════════════════════════
+  STAGE 2 — Question Type vs. Question Type
+════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────
+
+  A = yes_no_results   vs   B = multiple_choice_results
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]    12.97     7.83       +5.139 [   +3.111,    +7.250]  ✗ B better
+  Total tokens                    1238.81  1196.42      +42.389 [ -241.974,  +337.619]  ~ no significant difference
+  User response tokens             338.69   100.92     +237.778 [ +150.722,  +332.640]  ✗ B better
+  Mean faithfulness score            2.20     2.23       -0.028 [   -0.389,    +0.361]  ~ no significant difference
+    Coherence                        2.58     2.67       -0.083 [   -0.444,    +0.306]  ~ no significant difference
+    Alignment                        1.75     1.72       +0.028 [   -0.333,    +0.417]  ~ no significant difference
+    Separation                       2.28     2.31       -0.028 [   -0.500,    +0.472]  ~ no significant difference
+
+────────────────────────────────────────────────────────────
+
+  A = yes_no_results   vs   B = open_questions_results
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]    12.97     9.64       +3.333 [   +1.028,    +5.583]  ✗ B better
+  Total tokens                    1238.81  1383.81     -145.000 [ -445.670,  +158.787]  ~ no significant difference
+  User response tokens             338.69   616.50     -277.806 [ -406.444,  -151.358]  ✓ A better
+  Mean faithfulness score            2.20     2.19       +0.009 [   -0.426,    +0.444]  ~ no significant difference
+    Coherence                        2.58     2.61       -0.028 [   -0.444,    +0.361]  ~ no significant difference
+    Alignment                        1.75     1.75       +0.000 [   -0.472,    +0.472]  ~ no significant difference
+    Separation                       2.28     2.22       +0.056 [   -0.500,    +0.611]  ~ no significant difference
+
+────────────────────────────────────────────────────────────
+
+  A = multiple_choice_results   vs   B = open_questions_results
+  Outcome                          Mean A   Mean B   Diff (A−B)                 95% CI  Verdict
+  ----------------------------------------------------------------------------------------------------
+  Turns to convergence [PRIMARY]     7.83     9.64       -1.806 [   -3.556,    -0.139]  ✓ A better
+  Total tokens                    1196.42  1383.81     -187.389 [ -454.731,   +78.119]  ~ no significant difference
+  User response tokens             100.92   616.50     -515.583 [ -613.056,  -427.222]  ✓ A better
+  Mean faithfulness score            2.23     2.19       +0.037 [   -0.343,    +0.398]  ~ no significant difference
+    Coherence                        2.67     2.61       +0.056 [   -0.333,    +0.417]  ~ no significant difference
+    Alignment                        1.72     1.75       -0.028 [   -0.444,    +0.361]  ~ no significant difference
+    Separation                       2.31     2.22       +0.083 [   -0.389,    +0.528]  ~ no significant difference
+
+════════════════════════════════════════════════════════════
+  SUMMARY — Primary Outcome: Turns to Convergence
+════════════════════════════════════════════════════════════
+
+  Question type               Mean turns   Rank
+  ---------------------------------------------
+  multiple_choice_results           7.83      1
+  open_questions_results            9.64      2
+  yes_no_results                   12.97      3
+
+  Best (fewest turns): multiple_choice_results
+
