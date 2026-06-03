@@ -25,6 +25,7 @@ Usage:
 """
 
 import json
+import secrets
 import sys
 from dataclasses import dataclass
 from itertools import combinations
@@ -35,7 +36,7 @@ import numpy as np
 # ── Configuration ────────────────────────────────────────────────────────────
 
 N_RESAMPLES = 10_000
-RNG_SEED = 42
+RNG_SEED = secrets.randbits(32)
 CI_LEVEL = 0.95
 
 
