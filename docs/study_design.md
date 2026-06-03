@@ -38,6 +38,7 @@ This rule allows us to compare two different question types and assess which one
 In the baseline condition, documents are embedded without a task instruction.
 In the experimental conditions, the task instruction is derived from the elicited user preferences.
 This means the baseline differs from the experimental conditions in two ways: no preferences are elicited, and no instruction is provided to the embedding model.
+The baseline is used primarly to try to answer Q2, as it results to be almost uninformative for Q1.
 
 ## Sample-size justification
 
@@ -49,3 +50,24 @@ This is a tradeoff between the resources (API limits), time available and statis
 As stated in the "Baseline" section, the baseline differs from the experimental conditions in two ways: no user preferences are elicited, and no task instruction is provided to the embedding model.
 These two factors are confounded — the study cannot determine whether any observed improvement in faithfulness is driven by the preference elicitation, the instruction-guided embedding, or both.
 Isolating these effects would require an additional condition (e.g. instruction-guided embedding without elicitation) which is left for future work.
+
+Moreover, turns to convergence is designated the primary outcome for Q1 because it is objective and directly measures efficiency.
+Faithfulness is treated as a secondary outcome despite being arguably more consequential, mainly because it refers to Q2 and also because it is measured via LLM-as-judge and therefore carries additional measurement noise.
+This is also caused by time constraints, due to which the LLM-as-judge will not be a primary focus of development relative to other system modules.
+Nevertheless, a condition that wins on turns but loses on faithfulness would be a notable finding and is discussed explicitly in the decision rule.
+
+## Hypothesis testing
+
+The only hypothesis that will be tested in this study is:
+
+> Multiple choice questions are the best ones to be asked, as they represent the best tradeoff between user effort and information gained per turn.
+
+## Experiments
+
+To try to answer Q1 (thus, testing the hyphotesis mentioned above) and Q2, we will run N=108 different experiments.
+Each question type (for a total of 3 quesitons) will be tested 36 times.
+The simulated user will have a total of 18 different (persona, goal) combinations, meaning that each combination will be run 2 times.
+The number of personas used is 3 and the number of goals is 6.
+The exact personas and goals are available in the GitHub repository.
+
+The evaluation of the results of the experiments will be performed as described above in this document. 
