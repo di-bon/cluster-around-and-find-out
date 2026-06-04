@@ -1,10 +1,15 @@
 # Related work
 
-v2 - 2026-05-28
+v3 - 2026-06-04
 
 This document contains a brief summary of some papers about clustering and user interaction in natural language.
 
 ## Changelog
+
+### v3 (2026-06-04)
+- Papers read and added:
+
+    - Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models
 
 ### v2 (2026-05-28)
 
@@ -344,3 +349,10 @@ Paper: https://arxiv.org/pdf/2405.17428
 This paper introduces a method to create text embeddings by using decoder-only LLMs.
 It achieves this by replacing causal masks with bidirectional attention, introducing a latent attention layer for vector pooling, and utilizing a two-stage instruction-tuning process.
 It ranks 1st on the Massive Text Embedding Benchmark.
+
+
+## 12. Qwen3 Embedding: Advancing Text Embedding and Reranking Through Foundation Models
+
+Paper: https://arxiv.org/pdf/2506.05176
+
+**Takeaways**: similar to NV-Embed but easier to use
