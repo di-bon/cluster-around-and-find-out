@@ -1,0 +1,40 @@
+\section{Related Work}
+\label{sec:related_work}
+
+The intersection of large language models (LLMs) and text clustering has catalyzed a shift from purely statistical grouping to semantically driven, human-aligned categorization. 
+This section contextualizes our system within recent methodological precedents spanning conversational preference elicitation, LLM-guided clustering mechanics, and instruction-tuned text embeddings.
+
+\subsection{Conversational Preference Elicitation}
+Traditional preference learning often relies on passive feedback or static pairwise interactions. 
+Recent studies demonstrate that multi-turn natural language dialogues significantly increase informative value, reduce user friction, and expose nuanced criteria that passive settings miss \cite{eliciting_human_preferences}. 
+To optimize these dialogues, existing frameworks frequently depend on complex architectural additions or expensive post-training phases. 
+For instance, TO-GATE relies on trajectory optimization to balance clarification resolvers with task-aligned responses \cite{to_gate}, while other approaches leverage diffusion-inspired funneling strategies to fine-tune LLMs for incremental profile generation \cite{asking_clarifying_questions}.
+
+In contrast to these computationally heavy fine-tuning and optimization methods, our work introduces a streamlined, production-ready prompting paradigm. 
+We exploit the strong instruction-following capabilities of Qwen3.6-35B-A3B \cite{qwen3.6} by engineering a robust system prompt that transforms the model into an adaptive interview agent. 
+By feeding initial cluster insights directly into this system prompt, the agent is dynamically empowered to guide the conversation and extract actionable user preferences without requiring any underlying model fine-tuning. 
+This demonstrates that sophisticated, context-aware preference elicitation can be achieved purely through strategic prompt engineering and contextual data conditioning.
+
+\subsection{LLM-Assisted Clustering Algorithms}
+Rather than treating clustering as a separate downstream task, modern frameworks inject LLM intelligence directly into the clustering loop. 
+Early methods demonstrated that foundational models could act as zero- or few-shot categorizers by leveraging in-context learning to assign text fragments to candidate clusters based solely on illustrative prompt examples \cite{few_shot_clustering}. Building upon this, ClusterLLM utilizes hard triplet questions (e.g., assessing relative document similarities) and pairwise granularity queries to guide hierarchical text partitioning \cite{clusterllm}. However, traditional pairwise constraints scale poorly on extensive datasets. To alleviate this, optimized algorithms generate multi-element constraint sets (Must-Link and Cannot-Link blocks) via LLMs, achieving massive reductions in total API queries \cite{optimized_algorithms}.
+
+Other paradigms replace numeric geometric operations entirely. 
+\textit{Dial-In LLM} incorporates an LLM judge to label cluster coherence and iteratively isolate stable partitions while merging redundant configurations based on text intent labels \cite{dial_in_llm}. 
+Furthermore, approaches like \textit{k-LLMmeans} replace traditional numeric vector centroids with concise, LLM-generated textual summaries, enriching semantic interpretability and coherence \cite{summaries_as_centroids}. 
+In extreme cases, frameworks such as LLM-MemCluster eschew vector spaces altogether, manipulating a dynamic memory set of cluster labels with linear runtime complexity \cite{llm_memcluster}. 
+
+\subsection{Instruction-Guided Embeddings}
+While memory-only and summary-centroid systems offer distinct advantages, vector representations remain crucial for scalable text matching. 
+Crucially, a fixed embedding space cannot capture subjective, task-specific groupings. 
+Recent breakthroughs demonstrate that decoder-only LLMs can be transformed into generalist embedding models by replacing causal masking with bidirectional attention and integrating pooled latent layers \cite{nv_embed}. 
+
+Models such as \textit{e5-mistral-7b-instruct} prove that embedding vectors can adapt dynamically to explicit user instructions passed directly into the encoder prompt \cite{improving_text_embeddings}. In this project, we utilize \textbf{Qwen3-Embedding (8B)} \cite{qwen3_embedding}, an advanced instruction-tuned encoder that leverages this exact paradigm. By encoding the rich task instructions derived from our Qwen3.6-35B-A3B interviewing agent, the Qwen3-Embedding model projects document vectors into a space that reflects the user's subjective criteria, modifying semantic distances dynamically without requiring downstream fine-tuning.
+
+\subsection{Methodological Gap: Subjective Alignment}
+A critical limitation within current literature is the pervasive assumption that an objective, underlying ``ground-truth'' assignment exists for every text corpus, typically validated using external metrics like Normalized Mutual Information (NMI) or Rand Index (ARI) \cite{clusterllm, few_shot_clustering, llm_memcluster, optimized_algorithms}.
+
+Our work departs from this paradigm by addressing real-world deployments where text clustering is highly subjective and rigid mathematical benchmarks often misalign with a user's actual downstream goal. 
+Because no single, universally correct cluster assignment exists for such tasks, there is a distinct scarcity of research surrounding purely user-aligned evaluation. 
+Consequently, this study shifts the evaluative focus away from geometric benchmark matching. 
+Instead, we formalize internal conversational metrics—such as turn efficiency, conversation length, and LLM-as-judge multi-dimensional faithfulness—to assess how effectively a system adapts its representations to a user's idiosyncratic intent.

@@ -1,0 +1,9 @@
+\begin{abstract}
+Evaluating text clustering solutions is inherently challenging due to the subjective nature of human preferences and the absence of a universal ground-truth assignment.
+This paper introduces \textit{Cluster Around and Find Out}, an interactive, conversational text clustering system that leverages large language models (LLMs) to elicit user preferences through multi-turn dialogue.
+Rather than evaluating the underlying clustering algorithm in isolation, this study focuses on the quality, efficiency, and conversational dynamics of preference elicitation.
+We design a controlled experimental framework ($N=108$ runs) simulating distinct user personas and goals to evaluate three interaction paradigms: yes/no, multiple-choice, and open-ended questions. 
+Our primary outcome tracks the conversational turns required to achieve convergence, complemented by secondary measures of token efficiency and cluster faithfulness evaluated via an LLM-as-judge. 
+We hypothesize that multiple-choice queries offer the optimal tradeoff between human cognitive load and information gain per turn. 
+Finally, we compare our interactive approach against an uninstructed baseline to isolate the impact of preference-driven embedding guidance.
+\end{abstract}

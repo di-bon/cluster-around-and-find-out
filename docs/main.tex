@@ -1,0 +1,64 @@
+\documentclass[11pt,twocolumn]{article}
+
+% --- Core Geometry and Layout ---
+\usepackage[margin=1in]{geometry} % Standard academic page margins
+\setlength{\columnsep}{0.25in}     % Clean separation between text columns
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}       % Font encoding
+\usepackage{amsmath, amssymb}     % Standard math formatting
+\usepackage{graphicx}             % Inserting figures
+\usepackage{booktabs}             % Elegant, clean tables
+\usepackage{microtype}            % Subtly improves text spacing and justification
+\usepackage{lipsum}               % Placeholder text generator (remove later)
+\usepackage{makecell}             % Allows manual line breaks inside table cells
+
+% --- Hyperlinks Configuration ---
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+
+% --- Title and Author Metadata ---
+\title{\textbf{Cluster Around and Find Out: \\ A Conversational Clustering System}}
+
+% Academic block style for multiple authors 
+\author{
+  \textbf{Francesco Di Bon} \\
+  Department of Information Engineering and Computer Science \\
+  University of Trento \\
+  \texttt{francesco.dibon@studenti.unitn.it}
+}
+
+% Ensures the current date shows up in a standard format
+\date{\today} 
+
+% --- Begin Document ---
+\begin{document}
+
+\maketitle
+
+% --- Abstract (Spans across both columns) ---
+\input{sections/abstract}
+
+% --- Main Content ---
+\input{sections/introduction}
+
+\input{sections/related work}
+
+\input{sections/study design}
+
+\input{sections/methodology}
+
+\input{sections/results}
+
+\input{sections/discussion}
+
+\input{sections/limitations}
+
+\input{sections/ethics}
+
+\input{sections/conclusion}
+
+% --- References ---
+\bibliographystyle{ieeetr} % Choose a style (e.g., ieeetr, plain, alpha, unsrt)
+\bibliography{references}
+
+\end{document}

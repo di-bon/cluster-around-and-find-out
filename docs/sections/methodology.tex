@@ -1,0 +1,57 @@
+\section{Methodology}
+\label{sec:methodology}
+
+The architecture of \textit{Cluster Around and Find Out} operates as an interactive pipeline that translates qualitative natural language conversations into quantitative geometric adjustments within a vector space. 
+The workflow is divided into four main phases: initial corpus overview and baseline specification, prompt-engineered preference elicitation, instruction-guided embedding generation, and final customized clustering and evaluation pipeline. 
+The system couples conversational efficiency tracking with multi-dimensional metric verification to evaluate end-to-end user alignment.
+
+\subsection{Phase 1: Initial Corpus Overview and Baseline Specification}
+The pipeline begins with an unlabelled text corpus consisting of a subset of 500 questions from the StackOverflow full dataset.
+Before initializing the user interface, the system generates an initial structural layout of the text space to gather clean context for the conversational agent. 
+
+To achieve this, the corpus is processed using a standard, conventional text embedding system. 
+A traditional $K$-means clustering algorithm is executed over these conventional vectors with $K$ arbitrarily set to $10$. 
+From each of the $10$ identified clusters, the system randomly samples $3$ representative documents. 
+This yields a total of $30$ anchor documents that encapsulate the broad thematic variation of the dataset. 
+These $30$ documents are fed into the system prompt of the conversational agent to ground its domain awareness.
+
+Crucially, this phase also defines the uninstructed baseline used for downstream evaluation. 
+For the baseline condition, the entire 500-document dataset is embedded using the primary encoder, \textbf{Qwen3-Embedding (8B)}, configured with a static instruction stating that the user has no specific sorting preferences.
+The downstream clustering algorithm is then selected and configured by \textbf{Qwen3.6-35B-A3B} without any human alignment conditioning.
+This baseline assignment is completely isolated from the conversation pipeline; 
+it is never shown to the user or used by the interview agent, serving strictly as a control group to evaluate preference alignment post-experiment.
+
+\subsection{Phase 2: Prompt-Engineered Preference Elicitation}
+Instead of relying on heavy optimization or post-training adjustments, our conversational interface relies entirely on strategic prompt engineering. 
+The system initializes the interview agent using \textbf{Qwen3.6-35B-A3B}. 
+The model is configured via a comprehensive system prompt that embeds:
+\begin{enumerate}
+    \item The operational role of an expert data-mining interviewer.
+    \item The dataset context derived from the Phase 1 sampling, passing the $30$ randomly sampled anchor documents directly into the prompt.
+    \item Strict formatting rules corresponding to one of the three tested interactive paradigms: 
+    \textit{yes/no}, \textit{multiple-choice}, or \textit{open-ended} question formats.
+\end{enumerate}
+
+During the dialogue loop, the agent interviews a simulated user configured with specific combinations of 3 personas and 6 goals.
+The agent presents questions regarding document relationships, target granularity, and sorting logic, utilizing the initial cluster summaries to present concrete examples. 
+The interaction continues dynamically until the conversation hits convergence criteria—either reaching a structural consensus or hitting an arbitrary max turn limit set to 20. 
+At this point, the Qwen3.6-35B-A3B agent synthesizes the entire chat history into a concise, dense paragraph of text: 
+the \textit{User Preference Profile}.
+
+\subsection{Phase 3: Instruction-Guided Embedding Generation}
+Once the User Preference Profile is synthesized, it is directly injected into the downstream embedding pipeline as a formatting instruction. 
+We leverage \textbf{Qwen3-Embedding (8B)}, a decoder-only model optimized for instruction-tuned vector pooling. 
+
+Unlike traditional static encoders that project identical text to identical vectors regardless of intent, the Qwen3-Embedding model accepts a structured instruction prefix. 
+We construct our embedding prompt by mapping the User Preference Profile directly into the instruction field of the encoder. 
+The raw StackOverflow questions are then passed to the model under this prefix. 
+The model utilizes its internal bidirectional attention mechanisms to alter the weights of semantic tokens dynamically based on the instruction. 
+This maps the text into an adjusted high-dimensional space where documents sharing user-preferred traits are projected closer together, and documents violating the user's criteria are pushed further apart.
+
+\subsection{Phase 4: Final Customized Clustering and Evaluation Pipeline}
+In the final phase, the system applies a clustering algorithm over the newly adjusted instruction-guided embedding space. 
+Because the vector geometry itself has been altered by the Qwen3-Embedding model to reflect the conversation's nuances, a standard geometric partitioning algorithm can now capture subjective human intents. 
+
+The resulting clusters represent the customized configuration tailored to the user's specific persona and goal. 
+To maintain strict experimental alignment, the performance of these final clusters, along with the operational metrics of the dialogue loop, are captured, recorded, and processed using our LLM-as-judge. 
+This allows for an end-to-end evaluation of how well the interactive prompting paradigm shifts the underlying mathematical structure of the data compared to our uninstructed Phase 1 control baseline.

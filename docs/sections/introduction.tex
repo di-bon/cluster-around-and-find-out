@@ -1,0 +1,29 @@
+\section{Introduction}
+\label{sec:intro}
+
+Unsupervised text clustering serves as a cornerstone for exploring unlabelled textual data.
+However, traditional algorithmic approaches operate under a rigid paradigm, assuming that a singular, objectively correct group assignment exists \cite{clusterllm, dial_in_llm}.
+In practical applications, text categorization is highly subjective; 
+two users analyzing the same dataset may demand completely divergent cluster structures based on their immediate task constraints, domain expertise, or semantic perspectives \cite{eliciting_human_preferences}. 
+Consequently, static clustering solutions often fail to align with idiosyncratic human intents.
+
+To address this gap, recent paradigms have shifted toward integrating human-in-the-loop guidance within clustering workflows.
+Concurrently, Large Language Models (LLMs) have emerged as powerful conduits for natural language preference elicitation, uncovering latent user nuances far more dynamically than passive feedback mechanics \cite{eliciting_human_preferences, to_gate, asking_clarifying_questions}. 
+By positioning an LLM as an interviewing agent, a system can iteratively converse with a user, capture their architectural preferences for the data, and adapt downstream clustering behaviors accordingly.
+
+This project introduces \textit{Cluster Around and Find Out}, a conversational text clustering system designed to bridge user intent and document representation. 
+While clustering remains central to our pipeline, our empirical evaluation targets the conversational interface itself rather than raw cluster geometry against artificial baselines. 
+Specifically, we investigate two core research questions:
+\begin{itemize}
+    \item \textbf{Q1:} Which questioning paradigm (yes/no, multiple-choice, or open-ended) yields the most efficient path to convergence while minimizing human cognitive load?
+    \item \textbf{Q2:} Does incorporating task-specific instructions derived from conversational preferences materially improve the subjective faithfulness of the resulting clusters compared to an uninstructed baseline?
+\end{itemize}
+
+We formalize our investigation through a rigorous study design utilizing a simulated user with 3 distinct user personas and 6 specialized clustering goals across a subset of the StackOverflow dataset. 
+We explicitly test the hypothesis that multiple-choice questions strike the premier equilibrium—optimizing the volume of preference data harvested per turn without placing excessive linguistic or cognitive demands on the user. 
+
+The remainder of this report is organized as follows: 
+Section~\ref{sec:related_work} contextualizes our approach within the state-of-the-art literature; 
+Section~\ref{sec:study_design} and Section~\ref{sec:methodology} outline our experimental variables and system architecture; 
+Section~\ref{sec:results} and Section~\ref{sec:discussion} present our bootstrap-tested findings; 
+and Section~\ref{sec:limitations} addresses key confounding factors and future avenues.

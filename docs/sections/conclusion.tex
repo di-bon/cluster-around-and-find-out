@@ -1,0 +1,16 @@
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+This study introduced and systematically evaluated an interactive, dialogue-driven preference extraction framework designed to bridge the gap between qualitative human clustering intent and automated vector space partitioning. By deploying a Qwen3.6-35B-A3B user-facing agent across a rigorously balanced simulation matrix, we demonstrated that conversational interaction can successfully surface distinct thematic sorting goals without the resource-heavy overhead of direct model fine-tuning.
+
+Our empirical evaluation uncovered key trade-offs between conversational elicitation frameworks and downstream embedding adjustments. While multiple-choice structures proved significantly more efficient—minimizing conversational turns to convergence ($7.83$ turns) and reducing total token consumption—open-ended dialogues offered unconstrained structural expression at the cost of higher linguistic volatility. However, across all active interactive conditions, the resulting instruction-guided text embeddings encountered a distinct resolution boundary. When applied to hyper-short, domain-specific text fragments like Stack Overflow question titles, static prompt prefixes yielded minor global shifts but struggled to deeply restructure local vector distances or cleanly separate overlapping technical terms. 
+
+These findings suggest that while conversational preference extraction is highly viable for capturing macro-level human intent, lightweight instruction-based embedding modulation faces an informational bottleneck when processing short text snippets. Relying purely on a single-shot, offline clustering topology limits the system's capacity to enforce fine-grained topological constraints.
+
+\subsection{Future Work}
+Building upon the insights and structural boundaries identified in this work, we propose three primary directions for future research:
+\begin{enumerate}
+    \item \textbf{Dynamic Geometric Feedback Loops:} Future iterations should transition from an offline topology to an online, closed-loop interactive architecture. By feeding downstream clustering configurations back into the dialogue loop, the agent could dynamically enforce pairwise constraints in real time based on immediate user feedback.
+    \item \textbf{Adaptive Context Expansion:} To resolve the informational bottleneck observed with short text strings, future frameworks should explore automated context augmentation. Automatically parsing and appending supplementary metadata—such as generated keywords or keyphrases—could provide the semantic density required for embedding models to execute finer-grained separations.
+    \item \textbf{Evaluation under Dynamic Cognitive Loads:} Finally, deploying this framework with real-world human user studies will be essential to evaluate system robustness against conversational drift, ambiguous criteria, and non-responsive edge cases, moving beyond the idealized behavior enforced by our simulated user personas.
+\end{enumerate}
