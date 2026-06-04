@@ -1,0 +1,76 @@
+\section{Study Design}
+\label{sec:study_design}
+
+To systematically investigate the dynamics of interactive, conversational preference elicitation, we formalize our experiment using a multi-factor simulation environment. 
+This design maps user interaction types against varied user objectives to evaluate the structural bounds of our system.
+
+\subsection{Factor Structure}
+Our experimental design consists of independent variables, observed dependent variables, and tightly controlled constants.
+
+\begin{itemize}
+    \item \textbf{Independent Variables (Manipulated):} 
+    The primary manipulated factor is the \textit{question type} prompt-engineered into the Qwen3.6-35B-A3B interviewing agent. 
+    We test three distinct interactive formats: 
+    \textit{yes/no} questions, \textit{multiple-choice} questions, and \textit{open-ended} questions. 
+    Additionally, the internal directive of the simulated user changes systematically on each run across 3 different personas and 6 unique goals to test the adaptive boundaries of the agent.
+    \item \textbf{Dependent Variables (Observed):} 
+    For each individual run, we measure conversational efficiency via the total number of \textit{turns to convergence} and the total volume of \textit{tokens exchanged}. 
+    Question clarity is tracked via the \textit{user response token length}. 
+    Subjective accuracy is captured via a multidimensional \textit{faithfulness score} computed using an LLM-as-judge.
+    \item \textbf{Constants:} 
+    To guarantee that observed changes are driven solely by the independent variables, several parameters remain fixed across all conditions: 
+    the underlying corpus (a localized subset of 500 questions extracted from the StackOverflow full dataset), the core dialogue LLM (Qwen3.6-35B-A3B), the embedding encoder (Qwen3-Embedding 8B), the initial cluster count derived via K-means (used to enrich the system prompt of the interview agent), and the base behavioral persona of the simulated user.
+\end{itemize}
+
+\subsection{Outcomes and Hypothesis Testing}
+We categorize our experimental objectives into primary and secondary classifications to maximize statistical transparency.
+\begin{itemize}
+    \item \textbf{Primary Outcome:} 
+    \textit{Turns to convergence} serves as our primary outcome metric. 
+    It provides an objective, direct evaluation of dialogue efficiency and establishes the headline criteria for determining which question paradigm minimizes human friction.
+    \item \textbf{Secondary Outcomes:} 
+    Supporting metrics include the total tokens exchanged, user response tokens, and the mean faithfulness score (the composite average of coherence, alignment, and separation metrics). 
+    These support or clarify structural anomalies observed in the primary outcome but do not dictate the headline claim.
+\end{itemize}
+
+We formally evaluate the following hypothesis: 
+\begin{quote}
+\textit{Multiple-choice questions represent the optimal operational tradeoff between user cognitive load (response complexity) and information gained per turn, leading to superior efficiency compared to yes/no or open-ended configurations.}
+\end{quote}
+
+\subsection{Experimental Matrix}
+To test this hypothesis, we execute $N=108$ distinct experimental runs. 
+The three question types are balanced uniformly, resulting in 36 independent trials per interactive condition. 
+The simulation environment coordinates a matrix of 18 unique variations, blending 3 distinct user personas with 6 target goals.
+Each specific combination is executed exactly 2 times to ensure statistical reliability while mitigating runtime noise.
+
+\subsection{Decision Rule}
+To establish statistical significance without relying on rigid parametric assumptions, we employ a non-parametric bootstrapping strategy. 
+For each pairwise comparison between interactive question conditions (e.g., Multiple-Choice vs. Open-Ended), we calculate the absolute difference in sample means and generate a $95\%$ bootstrap confidence interval using $10000$ resamples.
+We conclude that Condition A is significantly more efficient than Condition B if and only if the $95\%$ confidence interval for the mean difference $(A - B)$ strictly excludes zero. 
+
+\subsection{Baseline and Experimental Limitations}
+The baseline condition embeds documents using the Qwen3-Embedding model under standard uninstructed configurations, skipping the interview stage and omitting task-specific metadata from the encoder prompt. 
+
+This introduces an architectural confound noted explicitly in our protocol: 
+the baseline differs from experimental conditions by both the \textit{absence of user preference elicitation} and the \textit{absence of task instructions during embedding generation}. 
+As a result, our study design cannot mathematically isolate whether an improvement in downstream cluster faithfulness is uniquely driven by dialogue elicitation, instruction-guided embedding mechanics, or their combined synergy. 
+Isolating these independent effects remains an objective for future iterations.
+
+\subsection{Simplifying Operational Assumptions}
+\label{subsec:assumptions}
+To maintain a mathematically tractable and structured evaluation framework, the experimental design operates under four foundational operational assumptions:
+\begin{itemize}
+    \item \textbf{User Responsiveness:} 
+    Simulated users are assumed to be fully responsive. When prompted, the agent always provides an explicit preference or definitively assigns a datapoint to a cluster. 
+    Conversational abstentions, ambiguous inputs, or ``I do not know'' responses are explicitly out of scope.
+    \item \textbf{Preference Consistency:} 
+    User preferences are modeled as perfectly stable within a single conversational session. 
+    The user agent will not contradict its earlier responses or exhibit shifting criteria mid-loop.
+    \item \textbf{Modality Restriction:} 
+    The system architecture operates strictly on a text-only data matrix. 
+    Multimodal document processing and heterogeneous data inputs are considered out of scope.
+    \item \textbf{Offline Clustering Topology:} 
+    The framework calculates a single, absolute clustering configuration at the conclusion of the dialogue loop. 
+    Partitioning is not executed incrementally during active conversation.
+\end{itemize}

@@ -1,0 +1,36 @@
+\section{Discussion}
+\label{sec:discussion}
+
+The empirical findings gathered from our $N=108$ balanced simulation matrix offer clear insights into interactive text exploration pipelines, unequivocally supporting our primary research hypothesis.
+
+\subsection{Validation of the Primary Hypothesis}
+Our core hypothesis stated that multiple-choice questions represent the optimal operational tradeoff between user effort and information gained per turn. 
+The experimental results completely substantiate this claim. 
+Multiple-choice frameworks achieved the absolute premier rank in conversational efficiency, converging in only $7.83$ turns. 
+
+Crucially, our clarity metrics unveil the mechanical reasons behind this success. 
+While yes/no selections seem simple, they lack informational bandwidth, forcing the system into protracted binary searching that prolonged the dialogue to a mean of $12.97$ turns. 
+Conversely, while open questions maximize the information harvested per turn, they trigger highly verbose replies ($616.50$ tokens on average), indicating a high cognitive burden. 
+
+Multiple-choice questions resolve this tension. 
+They compress user output to a minimal $100.92$ tokens while providing rich semantic boundaries. 
+This allows the interviewing agent to isolate user intent with minimal conversational turns, striking an optimal balance between low user effort and rapid informational gain.
+
+\subsection{The Faithfulness Paradox}
+The most surprising revelation of our study is the uniform lack of significant difference in downstream cluster faithfulness, both across the question types and against the uninstructed baseline control. 
+This uniform plateau (hovering between $1.96$ and $2.23$ out of $5.00$) points to a critical systemic limitation. 
+
+While the Qwen3.6-35B-A3B agent successfully extracted diverse preferences, translating these qualitative texts into instruction prompts did not yield localized vector space configurations that an LLM judge recognized as highly faithful. 
+This implies that instruction-guided text embeddings may have upper resolution boundaries when adjusting vector distances for highly niche, domain-specific corpora like StackOverflow questions. 
+The instruction space might handle general classification adjustments well, but struggles to cleanly separate overlapping technical terms based purely on brief prompt prefixes.
+
+Moreover, extremely concise text strings—such as Stack Overflow question titles—may inherently lack the semantic density required to effectively condition the downstream encoder, thereby limiting its capacity to generate highly aligned embedding vectors.
+
+\subsection{Synergy with Existing Literature}
+Our results build directly upon foundational concepts within preference learning. 
+By demonstrating that a prompt-engineered Qwen3.6-35B-A3B model can efficiently drive conversational convergence without specialized model tuning, we validate a lean alternative to the heavy trajectory optimizations found in frameworks like TO-GATE \cite{to_gate}. 
+
+However, the fact that our final cluster modifications flattened relative to the baseline provides a stark contrast to systems like ClusterLLM \cite{clusterllm} or Dial-In LLM \cite{dial_in_llm}. 
+Those frameworks actively enforce hard pairwise geometric constraints or utilize an active LLM looping mechanism to force partition rearrangements. 
+Our pipeline highlights that relying solely on a downstream instruction-tuned encoder—such as Qwen3-Embedding—presents an engineering bottleneck: 
+it trades away aggressive, computationally intensive cluster refinement for speed and scalability, but sacrifices nuanced, human-aligned faithfulness in the process.

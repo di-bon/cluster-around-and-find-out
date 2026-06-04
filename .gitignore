@@ -1,5 +1,6 @@
 *.pdf
 !docs/progress_report.pdf
+!docs/final_report.pdf
 .DS_Store
 
 .env

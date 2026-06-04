@@ -1,0 +1,39 @@
+\section{Limitations}
+\label{sec:limitations}
+
+While the empirical findings from our $N=108$ balanced simulation matrix offer clear architectural insights, several distinct technical and structural boundaries qualify the generalizability of this study.
+
+\subsection{Data Materiality and Information Bottlenecks}
+A primary constraint stems from the inherent structural attributes of the evaluation corpus under our text-only modality restriction. 
+The text fragments extracted from the StackOverflow dataset consist almost exclusively of extremely concise question titles. 
+Such brief text strings introduce a severe informational bottleneck. 
+Truncated inputs lack the semantic density, syntax variation, and contextual richness required to deeply steer the internal bidirectional attention mechanisms of a decoder-only embedding model. 
+Consequently, even when paired with an explicitly synthesized instruction prefix, the encoder is given very little baseline context to reshape, limiting its ability to project structurally distinct vector coordinates.
+
+\subsection{Granularity and Specialized Domain Resolution}
+The evaluation pipeline relies on a highly specialized technical dataset containing subtle conceptual overlaps (e.g., adjacent programming framework questions). 
+The uniform plateau observed in our downstream faithfulness scores across both active conditions and uninstructed baselines indicates a systemic limitation in the resolution boundary of instruction-guided vector tuning. 
+Static, brief instruction prefixes—like our generated User Preference Profiles—appear capable of driving coarse-grained global adjustments (such as broad thematic sorting), but fail to supply the heavy mathematical steering required to cleanly separate overlapping technical terms or enforce highly nuanced, human-specified partitioning criteria.
+
+\subsection{Algorithmic Staticity and Lack of Direct Refinement}
+Our methodology explicitly isolates the conversation pipeline from the embedding generation phase to test a lean, lightweight alternative to model fine-tuning, resulting in an offline clustering topology. 
+However, this architectural choice creates a unidirectional information flow: the qualitative conversation ends, a profile is generated, and the encoder runs exactly once. 
+The system lacks a dynamic feedback loop or active geometric constraint enforcement, such as forcing direct pairwise document distances or iteratively re-clustering based on immediate human corrections. 
+This design ensures computational efficiency and speed, but sacrifices the iterative, hyper-targeted alignment corrections seen in more resource-heavy preference-learning frameworks.
+
+\subsection{Simulated User Persona Modeling}
+The dialogue loop was evaluated using simulated user agents operating under strict persona and goal matrices. 
+While this programmatic simulation allowed us to execute a rigorously balanced and fully reproducible matrix of $108$ identical condition runs, it introduces an inevitable gap between simulated behavior and authentic human exploratory patterns.
+Real-world human users frequently exhibit conversational drifts, inconsistent sorting terminology, and shifting goals mid-dialogue, which would likely test the convergence mechanics and token efficiency of the conversational agent in ways not fully captured by automated personas.
+
+\subsection{Impact of Behavioral and Structural Assumptions}
+The empirical boundaries of our evaluation are further qualified by the simplifying operational assumptions declared at the conclusion of our study design (see Section~\ref{subsec:assumptions}). 
+Specifically, the assumptions of \textit{user responsiveness} and \textit{preference consistency} eliminate the conversational volatility typical of deployment with human subjects. 
+Real-world users frequently express ambiguity, offer contradictory feedback, or choose to abstain from forcing a preference when presented with unfamiliar technical clusters. 
+By isolating the system from noisy, inconsistent, or non-responsive dialogue inputs, our current baseline benchmarks likely reflect an idealized efficiency curve. 
+Consequently, further evaluation is required to determine how robustly the conversational agent handles edge cases where human intent drifts or fails to cooperate with prompt constraints.
+
+\subsection{Limited Human-in-the-Loop Validation}
+Finally, while the LLM-as-a-judge metric architecture was successfully cross-validated against human expert ratings, the manual annotation pool was heavily constrained by project timelines and resource availability. 
+Although the moderate composite agreement ($\kappa = 0.571$) validates the judge as a functionally sound baseline proxy for our comparative matrix ($N=108$), a larger and more diverse human-annotated sample would be required to fully calibrate the evaluator. 
+Without extensive validation across an expanded corpus, the current kappa estimates remain statistically unstable, masking potential edge cases where automated multidimensional scoring might diverge from highly idiosyncratic human perceptions of cluster quality.
