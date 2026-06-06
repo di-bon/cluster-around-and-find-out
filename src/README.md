@@ -15,6 +15,8 @@ To run the system:
 1. In a different terminal tab, start ollama with `ollama serve`
 1. Run `python main.py`
 
+Run `python main.py --help` to show the different interview types available.
+
 Note: 
 this code uses `qwen3.6:35b`.
 To run the code, make surve to have it installed by running `ollama pull qwen3.6:35b`.
